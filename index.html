@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Já está na Irlanda? Faça sua matrícula em curso superior agora! Mais de 1200 cursos disponíveis. Suporte gratuito e completo para sua aplicação.">
+    <title>CI Irlanda - Matrícula em Curso Superior | Já está na Irlanda?</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header com Logo -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <img src="images/ci-logo.png" alt="CI Irlanda Logo" class="logo">
+                <div class="header-cta">
+                    <a href="#hero-form" class="header-button">Quero me Matricular</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section com Formulário -->
+    <section class="hero-with-form">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="videos/campus-hero.mp4" type="video/mp4">
+            <img src="images/campus-hero.jpg" alt="Campus Universitário Irlandês" class="hero-video">
+        </video>
+        <div class="hero-overlay"></div>
+        
+        <div class="container hero-container">
+            <!-- Coluna Esquerda: Conteúdo -->
+            <div class="hero-content-column">
+                <div class="hero-badge">⚡ Consultoria 100% Gratuita</div>
+                <h1 class="hero-title">Inicie sua jornada acadêmica na Irlanda</h1>
+                <p class="hero-subtitle">Mais de <strong>5000 estudantes</strong> já se matricularam com a CI Irlanda. <strong>1200+ cursos</strong> disponíveis.</p>
+                
+                <!-- Benefícios Principais -->
+                <div class="hero-benefits-main">
+                    <div class="hero-benefit-card">
+                        <div class="hero-benefit-icon">🌐</div>
+                        <div class="hero-benefit-content">
+                            <h3>Tradução Gratuita de Documentos</h3>
+                            <p>Tradução completa e gratuita de toda sua documentação acadêmica</p>
+                        </div>
+                    </div>
+                    <div class="hero-benefit-card">
+                        <div class="hero-benefit-icon">🎯</div>
+                        <div class="hero-benefit-content">
+                            <h3>Acompanhamento em Todo o Processo</h3>
+                            <p>Suporte completo e gratuito do início ao fim da sua matrícula</p>
+                        </div>
+                    </div>
+                    <div class="hero-benefit-card">
+                        <div class="hero-benefit-icon">💼</div>
+                        <div class="hero-benefit-content">
+                            <h3>Consultoria do Início ao Fim</h3>
+                            <p>Nossos especialistas te guiam em cada etapa da sua jornada acadêmica</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prova Social -->
+                <div class="hero-social-proof">
+                    <div class="social-proof-item">
+                        <div class="social-proof-number">5000+</div>
+                        <div class="social-proof-label">Estudantes Matriculados</div>
+                    </div>
+                    <div class="social-proof-item">
+                        <div class="social-proof-number">24h</div>
+                        <div class="social-proof-label">Resposta Garantida</div>
+                    </div>
+                    <div class="social-proof-item">
+                        <div class="social-proof-number">100%</div>
+                        <div class="social-proof-label">Gratuito</div>
+                    </div>
+                </div>
+
+                <p class="hero-guarantee">✅ Sem compromisso • ✅ Consultoria gratuita • ✅ Resposta em 24h</p>
+            </div>
+
+            <!-- Coluna Direita: Formulário -->
+            <div id="hero-form" class="hero-form-column">
+                <div class="form-wrapper">
+                    <div class="form-header">
+                        <h2>Vamos começar o seu processo!</h2>
+                    </div>
+                
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="nomecontato">Nome Completo *</label>
+                        <input type="text" id="nomecontato" name="nomecontato" required placeholder="Seu nome completo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emailcontato">E-mail *</label>
+                        <input type="email" id="emailcontato" name="emailcontato" required placeholder="seu@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefonecontato">Telefone/WhatsApp *</label>
+                        <input type="tel" id="telefonecontato" name="telefonecontato" required placeholder="+353 83 123 4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mensagem">Conte-nos sobre seus objetivos *</label>
+                        <textarea id="mensagem" name="mensagem" required rows="2" placeholder="Ex: Quero fazer graduação em Business..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">Quero me Matricular</span>
+                        <span class="btn-loader" style="display: none;">Enviando...</span>
+                    </button>
+
+                    <div id="formMessage" class="form-message"></div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Por que escolher a CI Irlanda?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📚</div>
+                    <h3>Mais de 1200 Cursos</h3>
+                    <p>Portfólio completo de universidades parceiras com Graduações, pós-graduações e mestrados.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">👥</div>
+                    <h3>Mais de 5000 Alunos</h3>
+                    <p>Mais de 5000 histórias transformadas aplicando, orientando e acompanhando nossos universitários.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌐</div>
+                    <h3>Loja Física na Irlanda</h3>
+                    <p>Presença física em Dublin para dar suporte completo durante sua jornada acadêmica.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🆓</div>
+                    <h3>Tradução Gratuita</h3>
+                    <p>Tradução de documentação gratuita para facilitar seu processo de aplicação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2 class="final-cta-title">Não perca mais tempo!</h2>
+            <p class="final-cta-subtitle">Preencha o formulário agora e inicie o seu processo! Consultoria 100% gratuita.</p>
+            <a href="#hero-form" class="final-cta-button">Quero me Matricular Agora</a>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="location-section">
+        <div class="container">
+            <h2 class="section-title">Nossa Loja Física em Dublin</h2>
+            <p class="location-subtitle">Venha nos visitar! Estamos prontos para te ajudar pessoalmente.</p>
+            
+            <div class="location-content">
+                <!-- Foto da Loja -->
+                <div class="store-photo">
+                    <img src="images/ci-ireland-office.jpg" alt="CI Irlanda - Loja Física em Dublin" class="store-image">
+                </div>
+                
+                <!-- Mapa -->
+                <div class="store-map">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2381.85573145558!2d-6.273963188021604!3d53.34583867464635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48670c28196db075%3A0xe343f6fe09993741!2sCI%20Interc%C3%A2mbio%20-%20Irlanda!5e0!3m2!1spt-BR!2sbr!4v1770998057889!5m2!1spt-BR!2sbr" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0; min-height: 400px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="CI Ireland - Ormond Building, Dublin 7">
+                    </iframe>
+                </div>
+            </div>
+            
+            <div class="location-info">
+                <div class="location-info-item">
+                    <div class="location-icon">📍</div>
+                    <div>
+                        <h3>Endereço</h3>
+                        <p>Ground Floor, Ormond Building<br>
+                        31-36 Ormond Quay Upper, Inns Quay<br>
+                        Dublin 7 - Dublin, Irlanda</p>
+                    </div>
+                </div>
+                <div class="location-info-item">
+                    <div class="location-icon">🕐</div>
+                    <div>
+                        <h3>Horário de Atendimento</h3>
+                        <p>Segunda a Sexta<br>
+                        9:30 am – 6 pm</p>
+                    </div>
+                </div>
+                <div class="location-info-item">
+                    <div class="location-icon">📞</div>
+                    <div>
+                        <h3>Contato</h3>
+                        <p>Telefone: +353 01 874 7095<br>
+                        WhatsApp: +353 83 083 7734</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p><strong>Telefone:</strong> +353 01 874 7095</p>
+                    <p><strong>WhatsApp:</strong> +353 83 083 7734 ou +353 86 014 2313</p>
+                    <p><strong>E-mail:</strong> <a href="mailto:mktireland@ci.com.br">mktireland@ci.com.br</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Endereço</h3>
+                    <p>Ground Floor, Ormond Building</p>
+                    <p>31-36 Ormond Quay Upper, Inns Quay</p>
+                    <p>Dublin 7 - Dublin, Irlanda</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Horário de Atendimento</h3>
+                    <p>Segunda a Sexta</p>
+                    <p>9:30 am – 6 pm</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CI Irlanda. Todos os direitos reservados.</p>
+                <p>Intercambio Study Travel Limited | Número de registro: 584564</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
