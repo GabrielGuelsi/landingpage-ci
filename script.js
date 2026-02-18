@@ -169,9 +169,6 @@ function collectFormData() {
     if (urlParams.get('utm_term')) data.term = urlParams.get('utm_term');
     if (urlParams.get('gclid')) data.gclid = urlParams.get('gclid');
     
-    // Origem da página
-    data.origem = window.location.href;
-
     return data;
 }
 
