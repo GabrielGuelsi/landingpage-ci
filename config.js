@@ -3,11 +3,11 @@
 
 const CONFIG = {
     // URL base da API
-    API_BASE_URL: 'https://goireland.ci.com.br/api',
+    API_BASE_URL: 'https://gogreen.ci.com.br/api',
     
     // Token de autorização da API
     // IMPORTANTE: Substitua pela sua chave de autorização real
-    API_TOKEN: 'eyJzdWIiOiIy0DAwMDcwMyIsIm5hbWUiOiJNWVRNIE9maWNpYWwiLCJpYXQiOjE1MTYyMzkwMjJ9',
+    API_TOKEN: 'wOSfJm5NP5h6xqU78PB5u6M12o450D43k43knvN2',
     
     // Configurações de mensagens
     MESSAGES: {

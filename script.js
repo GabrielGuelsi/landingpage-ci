@@ -51,30 +51,10 @@ function maskPhone(value) {
     return value;
 }
 
-// Máscara de telefone completo (formato: +353 83 123 4567)
+// Máscara simples de telefone: permite +, números e espaços, sem forçar DDI
 function maskPhoneComplete(value) {
-    // Remove tudo exceto números e +
-    let cleaned = value.replace(/[^\d+]/g, '');
-    
-    // Se não começar com +, adiciona +353
-    if (!cleaned.startsWith('+')) {
-        cleaned = '+353' + cleaned.replace(/\D/g, '');
-    }
-    
-    // Se começar com +353, formata como telefone irlandês
-    if (cleaned.startsWith('+353')) {
-        const numbers = cleaned.replace(/\D/g, '').substring(3); // Remove +353
-        if (numbers.length <= 2) {
-            return '+353 ' + numbers;
-        } else if (numbers.length <= 5) {
-            return '+353 ' + numbers.substring(0, 2) + ' ' + numbers.substring(2);
-        } else {
-            return '+353 ' + numbers.substring(0, 2) + ' ' + numbers.substring(2, 5) + ' ' + numbers.substring(5, 9);
-        }
-    }
-    
-    // Para outros países, mantém o formato original
-    return cleaned;
+    // Mantém apenas dígitos, + e espaços
+    return value.replace(/[^\d+\s]/g, '');
 }
 
 // Aplicar máscara de telefone completo
@@ -83,13 +63,6 @@ const telefoneInput = document.getElementById('telefonecontato');
 if (telefoneInput) {
     telefoneInput.addEventListener('input', (e) => {
         e.target.value = maskPhoneComplete(e.target.value);
-    });
-    
-    // Adicionar +353 por padrão se o campo estiver vazio ao focar
-    telefoneInput.addEventListener('focus', (e) => {
-        if (!e.target.value) {
-            e.target.value = '+353 ';
-        }
     });
 }
 
@@ -128,9 +101,9 @@ function validateForm(formData) {
         errors.push('Telefone é obrigatório');
     } else {
         const telefoneLimpo = formData.telefonecontato.replace(/\D/g, '');
-        // Verifica se tem pelo menos 9 dígitos (após remover +353 que tem 3 dígitos)
-        if (telefoneLimpo.length < 12) { // +353 (3) + 9 dígitos = 12 mínimo
-            errors.push('Telefone deve incluir o código do país (ex: +353 83 123 4567)');
+        // Verifica se tem ao menos 8 dígitos (qualquer país)
+        if (telefoneLimpo.length < 8) {
+            errors.push('Telefone deve incluir código do país e número completo');
         }
     }
 
@@ -148,8 +121,8 @@ function collectFormData() {
     
     // Separar DDI e telefone do campo único
     const telefoneCompleto = formData.get('telefonecontato') || '';
-    let dditelefonecontato = '+353';
-    let telefonecontato = telefoneCompleto;
+    let dditelefonecontato = '';
+    let telefonecontato = telefoneCompleto.trim();
     
     // Extrair DDI se presente
     if (telefoneCompleto.startsWith('+')) {
