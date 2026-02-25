@@ -17,7 +17,7 @@
             <div class="header-content">
                 <img src="images/ci-logo.png" alt="CI Irlanda Logo" class="logo">
                 <div class="header-cta">
-                    <a href="#hero-form" class="header-button">Quero me Matricular</a>
+                    <a href="#hero-form" class="header-button">Iniciar meu planejamento acadêmico</a>
                 </div>
             </div>
         </div>
@@ -34,59 +34,57 @@
         <div class="container hero-container">
             <!-- Coluna Esquerda: Conteúdo -->
             <div class="hero-content-column">
-                <div class="hero-badge">⚡ Consultoria 100% Gratuita</div>
-                <h1 class="hero-title">Inicie sua jornada acadêmica na Irlanda</h1>
-                <p class="hero-subtitle">Mais de <strong>5000 estudantes</strong> já se matricularam com a CI Irlanda. <strong>1200+ cursos</strong> disponíveis.</p>
-                
+                <h1 class="hero-title">Escolher um curso superior na Irlanda não é sobre matrícula.</h1>
+                <h2 class="hero-title-2"><strong>É sobre o seu futuro.</strong> </h2>
+                <p class="hero-subtitle">Há <strong>9 anos</strong>, orientamos mais de <strong>8.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade.</p>
+
                 <!-- Benefícios Principais -->
                 <div class="hero-benefits-main">
+                    <h3 class="hero-benefits-title">Decisões bem orientadas começam com entendimento profundo do seu perfil:</h3>
                     <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">🌐</div>
+                        <div class="hero-benefit-icon">✔</div>
                         <div class="hero-benefit-content">
-                            <h3>Tradução Gratuita de Documentos</h3>
-                            <p>Tradução completa e gratuita de toda sua documentação acadêmica</p>
+                            <h3>Análise Estratégica Individual</h3>
+                            <p>Realizamos um diagnóstico do seu histórico e objetivos antes de qualquer recomendação. Cada orientação é personalizada e baseada no seu perfil real.</p>
                         </div>
                     </div>
                     <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">🎯</div>
+                        <div class="hero-benefit-icon">✔</div>
                         <div class="hero-benefit-content">
-                            <h3>Acompanhamento em Todo o Processo</h3>
-                            <p>Suporte completo e gratuito do início ao fim da sua matrícula</p>
+                            <h3>Curadoria Criteriosa de Instituições</h3>
+                            <p>Indicamos programas que fortalecem seu currículo e ampliam suas oportunidades no mercado irlandês e mundial.</p>
                         </div>
                     </div>
                     <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">💼</div>
+                        <div class="hero-benefit-icon">✔</div>
                         <div class="hero-benefit-content">
-                            <h3>Consultoria do Início ao Fim</h3>
-                            <p>Nossos especialistas te guiam em cada etapa da sua jornada acadêmica</p>
+                            <h3>Orientação especializada, sem honorários extras.</h3>
+                            <p>Não há cobrança adicional pela nossa consultoria. O investimento está apenas no valor do curso junto à instituição.</p>
+                        </div>
+                    </div>
+                    <div class="hero-benefit-card">
+                        <div class="hero-benefit-icon">✔</div>
+                        <div class="hero-benefit-content">
+                            <h3>Planejamento de Visto e Progressão de Carreira</h3>
+                            <p>Alinhamos sua escolha acadêmica à sua estratégia migratória e posicionamento profissional.</p>
+                        </div>
+                    </div>
+                    <div class="hero-benefit-card">
+                        <div class="hero-benefit-icon">✔</div>
+                        <div class="hero-benefit-content">
+                            <h3>Acompanhamento Consultivo do Diagnóstico à Matrícula</h3>
+                            <p>Conduzimos todo o processo com método, organização e orientação especializada até a matrícula.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Prova Social -->
-                <div class="hero-social-proof">
-                    <div class="social-proof-item">
-                        <div class="social-proof-number">5000+</div>
-                        <div class="social-proof-label">Estudantes Matriculados</div>
-                    </div>
-                    <div class="social-proof-item">
-                        <div class="social-proof-number">24h</div>
-                        <div class="social-proof-label">Resposta Garantida</div>
-                    </div>
-                    <div class="social-proof-item">
-                        <div class="social-proof-number">100%</div>
-                        <div class="social-proof-label">Gratuito</div>
-                    </div>
-                </div>
-
-                <p class="hero-guarantee">✅ Sem compromisso • ✅ Consultoria gratuita • ✅ Resposta em 24h</p>
             </div>
 
             <!-- Coluna Direita: Formulário -->
             <div id="hero-form" class="hero-form-column">
                 <div class="form-wrapper">
                     <div class="form-header">
-                        <h2>Vamos começar o seu processo!</h2>
+                        <h2>Iniciar meu planejamento acadêmico</h2>
                     </div>
                 
                 <form id="contactForm" class="contact-form">
@@ -106,12 +104,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="mensagem">Conte-nos sobre seus objetivos *</label>
-                        <textarea id="mensagem" name="mensagem" required rows="2" placeholder="Ex: Quero fazer graduação em Business..."></textarea>
+                        <label for="nivelingles">Qual seu nível de Inglês? *</label>
+                        <select id="nivelingles" name="nivelingles" required>
+                            <option value="">Selecione seu nível</option>
+                            <option value="Basico">Básico</option>
+                            <option value="Intermediario">Intermediário</option>
+                            <option value="Avancado">Avançado</option>
+                            <option value="Fluente">Fluente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vencimentovisto">Quando vence o seu visto? *</label>
+                        <input type="date" id="vencimentovisto" name="vencimentovisto" required>
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        <span class="btn-text">Quero me Matricular</span>
+                        <span class="btn-text">Solicitar Contato</span>
                         <span class="btn-loader" style="display: none;">Enviando...</span>
                     </button>
 
@@ -126,26 +135,113 @@
     <section class="benefits">
         <div class="container">
             <h2 class="section-title">Por que escolher a CI Irlanda?</h2>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">📚</div>
-                    <h3>Mais de 1200 Cursos</h3>
-                    <p>Portfólio completo de universidades parceiras com Graduações, pós-graduações e mestrados.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">👥</div>
-                    <h3>Mais de 5000 Alunos</h3>
-                    <p>Mais de 5000 histórias transformadas aplicando, orientando e acompanhando nossos universitários.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🌐</div>
-                    <h3>Loja Física na Irlanda</h3>
-                    <p>Presença física em Dublin para dar suporte completo durante sua jornada acadêmica.</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">🆓</div>
-                    <h3>Tradução Gratuita</h3>
-                    <p>Tradução de documentação gratuita para facilitar seu processo de aplicação.</p>
+            <div class="benefits-differential">
+                <h3>Porque nós entendemos as consequências da sua escolha.</h3>
+                <p>Ao longo de mais de 8.000 orientações acadêmicas, vimos como um curso bem escolhido acelera trajetórias,  e como uma decisão desalinhada pode limitar oportunidades.</p>
+            </div>
+            <div class="benefits-marquee" aria-label="Diferenciais CI Irlanda">
+                <div class="benefits-track">
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">01</div>
+                        <h3>Mais de 1200 Cursos</h3>
+                        <p>Portfólio completo de universidades parceiras com graduações, pós-graduações e mestrados.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">02</div>
+                        <h3>Mais de 8000 Alunos</h3>
+                        <p>Mais de 8000 histórias transformadas com aplicação, orientação e acompanhamento universitário.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">03</div>
+                        <h3>Loja Física na Irlanda</h3>
+                        <p>Presença física em Dublin para dar suporte completo durante sua jornada acadêmica.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">04</div>
+                        <h3>Economia Real</h3>
+                        <p>Orientamos sem cobrança. O valor é só do programa na universidade parceira.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">05</div>
+                        <h3>Visto e progressão acadêmica</h3>
+                        <p>Orientamos sua escolha considerando impacto no visto atual e nas próximas etapas da sua trajetória na Irlanda.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">06</div>
+                        <h3>Intermediação B2B</h3>
+                        <p>Te representamos perante a instituição escolhida, tornando os processos mais fáceis e fluidos.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">07</div>
+                        <h3>Flexibilidade no Pagamento</h3>
+                        <p>Parcelamento no cartão de crédito e apoio na solicitação de empréstimo estudantil.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">08</div>
+                        <h3>Preparatório para o exame de aceitação</h3>
+                        <p>Você terá acesso às aulas preparatórias para o exame de aceitação nas universidades parceiras.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">09</div>
+                        <h3>Tax Relief</h3>
+                        <p>Orientação para buscar reembolso de até 20% do valor pago no curso.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee">
+                        <div class="benefit-number">10</div>
+                        <h3>Apoio Antes, Durante e Depois</h3>
+                        <p>Customer Experience ao seu lado na Irlanda, com convites para eventos e apoio local via WhatsApp.</p>
+                    </article>
+
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">01</div>
+                        <h3>Mais de 1200 Cursos</h3>
+                        <p>Portfólio completo de universidades parceiras com graduações, pós-graduações e mestrados.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">02</div>
+                        <h3>Mais de 5000 Alunos</h3>
+                        <p>Mais de 5000 histórias transformadas com aplicação, orientação e acompanhamento universitário.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">03</div>
+                        <h3>Loja Física na Irlanda</h3>
+                        <p>Presença física em Dublin para dar suporte completo durante sua jornada acadêmica.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">04</div>
+                        <h3>Economia Real</h3>
+                        <p>Você não paga nenhum euro extra e recebe um serviço de excelência, totalmente gratuito.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">05</div>
+                        <h3>Tradução Sem Custo</h3>
+                        <p>Tradução de documentação necessária para aplicação, como histórico e diploma, sem custo para você.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">06</div>
+                        <h3>Intermediação B2B</h3>
+                        <p>Representação perante a instituição escolhida, tornando os processos mais fáceis e fluidos.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">07</div>
+                        <h3>Flexibilidade no Pagamento</h3>
+                        <p>Entrada reduzida, parcelamento no cartão de crédito e apoio na solicitação de empréstimo estudantil.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">08</div>
+                        <h3>Preparatório para Duolingo</h3>
+                        <p>Ao pagar 25% da entrada do curso, você ganha acesso às aulas de preparação gratuitamente.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">09</div>
+                        <h3>Tax Relief</h3>
+                        <p>Orientação para buscar reembolso de até 20% do valor pago no curso.</p>
+                    </article>
+                    <article class="benefit-card benefit-card--marquee" aria-hidden="true">
+                        <div class="benefit-number">10</div>
+                        <h3>Apoio Antes, Durante e Depois</h3>
+                        <p>Customer Experience ao seu lado na Irlanda, com convites para eventos e apoio local via WhatsApp.</p>
+                    </article>
                 </div>
             </div>
         </div>
@@ -154,9 +250,9 @@
     <!-- Final CTA Section -->
     <section class="final-cta">
         <div class="container">
-            <h2 class="final-cta-title">Não perca mais tempo!</h2>
-            <p class="final-cta-subtitle">Preencha o formulário agora e garanta sua vaga. Consultoria 100% gratuita.</p>
-            <a href="#hero-form" class="final-cta-button">Quero me Matricular Agora</a>
+            <h2 class="final-cta-title">Orientação estratégica começa com o primeiro passo.</h2>
+            <p class="final-cta-subtitle">Compartilhe os seus objetivos. Nossa equipe analisará seu caso para estruturar sua próxima decisão acadêmica na Irlanda.</p>
+            <a href="#hero-form" class="final-cta-button">Solicitar minha análise personalizada</a>
         </div>
     </section>
 
@@ -164,18 +260,30 @@
     <section class="location-section">
         <div class="container">
             <h2 class="section-title">Nossa Loja Física em Dublin</h2>
-            <p class="location-subtitle">Venha nos visitar! Estamos prontos para te ajudar pessoalmente.</p>
+            <p class="location-subtitle">Contamos com estrutura física na Irlanda para receber estudantes que preferem orientação presencial. Nossa equipe está disponível para atendimentos em nosso escritório em Dublin.
+
+Será um prazer receber você.</p>
             
             <div class="location-content">
                 <!-- Foto da Loja -->
-                <div class="store-photo">
-                    <img src="images/ci-ireland-office.jpg" alt="CI Irlanda - Loja Física em Dublin" class="store-image">
+                <div class="store-photo" data-office-carousel>
+                    <div class="store-carousel-track">
+                        <img src="images/ci-ireland-office.jpg" alt="CI Irlanda - Loja Física em Dublin" class="store-image is-active">
+                        <img src="images/ci-ireland-office2.jpg" alt="CI Irlanda - Loja Física em Dublin" class="store-image">
+                        <!-- Adicione novas fotos aqui, ex:
+                        <img src="images/ci-ireland-office-2.jpg" alt="CI Irlanda - Loja Física em Dublin" class="store-image">
+                        <img src="images/ci-ireland-office-3.jpg" alt="CI Irlanda - Loja Física em Dublin" class="store-image">
+                        -->
+                    </div>
+                    <button type="button" class="store-carousel-btn prev" aria-label="Foto anterior">‹</button>
+                    <button type="button" class="store-carousel-btn next" aria-label="Próxima foto">›</button>
+                    <div class="store-carousel-dots" aria-label="Navegação das fotos"></div>
                 </div>
                 
                 <!-- Mapa -->
                 <div class="store-map">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2381.789!2d-6.267!3d53.347!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48670e9c!2sOrmond%20Building%2C%2031-36%20Ormond%20Quay%20Upper%2C%20Inns%20Quay%2C%20Dublin%207!5e0!3m2!1spt-BR!2sbr!4v1234567890" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2381.85573145558!2d-6.273963188021604!3d53.34583867464635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48670c28196db075%3A0xe343f6fe09993741!2sCI%20Interc%C3%A2mbio%20-%20Irlanda!5e0!3m2!1spt-BR!2sbr!4v1772016557899!5m2!1spt-BR!2sbr" 
                         width="100%" 
                         height="100%" 
                         style="border:0; min-height: 400px;" 
@@ -187,34 +295,7 @@
                 </div>
             </div>
             
-            <div class="location-info">
-                <div class="location-info-item">
-                    <div class="location-icon">📍</div>
-                    <div>
-                        <h3>Endereço</h3>
-                        <p>Ground Floor, Ormond Building<br>
-                        31-36 Ormond Quay Upper, Inns Quay<br>
-                        Dublin 7 - Dublin, Irlanda</p>
-                    </div>
-                </div>
-                <div class="location-info-item">
-                    <div class="location-icon">🕐</div>
-                    <div>
-                        <h3>Horário de Atendimento</h3>
-                        <p>Segunda a Sexta<br>
-                        9:30 am – 6 pm</p>
-                    </div>
-                </div>
-                <div class="location-info-item">
-                    <div class="location-icon">📞</div>
-                    <div>
-                        <h3>Contato</h3>
-                        <p>Telefone: +353 01 874 7095<br>
-                        WhatsApp: +353 83 083 7734</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+           
     </section>
 
     <!-- Footer -->
@@ -232,11 +313,6 @@
                     <p>Ground Floor, Ormond Building</p>
                     <p>31-36 Ormond Quay Upper, Inns Quay</p>
                     <p>Dublin 7 - Dublin, Irlanda</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Horário de Atendimento</h3>
-                    <p>Segunda a Sexta</p>
-                    <p>9:30 am – 6 pm</p>
                 </div>
             </div>
             <div class="footer-bottom">

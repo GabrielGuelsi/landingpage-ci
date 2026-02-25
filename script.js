@@ -107,8 +107,12 @@ function validateForm(formData) {
         }
     }
 
-    if (!formData.mensagem || formData.mensagem.trim() === '') {
-        errors.push('Conte-nos sobre seus objetivos é obrigatório');
+    if (!formData.nivelingles || formData.nivelingles.trim() === '') {
+        errors.push('Nível de Inglês é obrigatório');
+    }
+
+    if (!formData.vencimentovisto || formData.vencimentovisto.trim() === '') {
+        errors.push('Data de vencimento do visto é obrigatória');
     }
 
     return errors;
@@ -133,12 +137,18 @@ function collectFormData() {
         }
     }
     
+    const nivelIngles = formData.get('nivelingles') || '';
+    const vencimentoVisto = formData.get('vencimentovisto') || '';
+    const mensagem = `Nível de Inglês: ${nivelIngles}. Vencimento do visto: ${vencimentoVisto}.`;
+
     const data = {
         nomecontato: formData.get('nomecontato'),
         emailcontato: formData.get('emailcontato'),
         dditelefonecontato: dditelefonecontato,
         telefonecontato: telefonecontato,
-        mensagem: formData.get('mensagem')
+        mensagem: mensagem,
+        nivelingles: nivelIngles,
+        vencimentovisto: vencimentoVisto
     };
 
     // ID da unidade (obrigatório pela API, usando valor padrão se não fornecido)
@@ -243,6 +253,91 @@ async function submitForm(event) {
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
+    const officeCarousel = document.querySelector('[data-office-carousel]');
+    if (officeCarousel) {
+        const slides = Array.from(officeCarousel.querySelectorAll('.store-image'));
+        const prevBtn = officeCarousel.querySelector('.store-carousel-btn.prev');
+        const nextBtn = officeCarousel.querySelector('.store-carousel-btn.next');
+        const dotsContainer = officeCarousel.querySelector('.store-carousel-dots');
+        let currentSlide = 0;
+
+        const goToSlide = (index) => {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('is-active', idx === index);
+            });
+            if (dotsContainer) {
+                dotsContainer.querySelectorAll('.store-carousel-dot').forEach((dot, idx) => {
+                    dot.classList.toggle('is-active', idx === index);
+                });
+            }
+            currentSlide = index;
+        };
+
+        if (slides.length > 1) {
+            slides.forEach((_, idx) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = `store-carousel-dot${idx === 0 ? ' is-active' : ''}`;
+                dot.setAttribute('aria-label', `Ir para foto ${idx + 1}`);
+                dot.addEventListener('click', () => goToSlide(idx));
+                if (dotsContainer) dotsContainer.appendChild(dot);
+            });
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    const nextIndex = (currentSlide - 1 + slides.length) % slides.length;
+                    goToSlide(nextIndex);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const nextIndex = (currentSlide + 1) % slides.length;
+                    goToSlide(nextIndex);
+                });
+            }
+        } else {
+            if (prevBtn) prevBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (dotsContainer) dotsContainer.style.display = 'none';
+        }
+    }
+
+    const formModal = document.getElementById('hero-form-modal');
+    const openFormTriggers = document.querySelectorAll('[data-open-form]');
+    const closeFormTriggers = document.querySelectorAll('[data-close-form]');
+
+    const openFormModal = () => {
+        if (!formModal) return;
+        formModal.classList.add('is-open');
+        formModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeFormModal = () => {
+        if (!formModal) return;
+        formModal.classList.remove('is-open');
+        formModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    };
+
+    openFormTriggers.forEach((trigger) => {
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            openFormModal();
+        });
+    });
+
+    closeFormTriggers.forEach((trigger) => {
+        trigger.addEventListener('click', closeFormModal);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && formModal && formModal.classList.contains('is-open')) {
+            closeFormModal();
+        }
+    });
+
     // Adicionar event listener ao formulário
     const form = document.getElementById('contactForm');
     if (form) {
@@ -252,6 +347,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adicionar animação suave ao scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
+            if (this.hasAttribute('data-open-form')) {
+                return;
+            }
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
