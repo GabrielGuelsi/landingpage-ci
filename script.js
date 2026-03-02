@@ -1,6 +1,7 @@
 // Configuração da API
 // Use CONFIG do arquivo config.js se disponível, senão use valores padrão
 const API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_BASE_URL) || '/api';
+const API_LEAD_ENDPOINT = (typeof CONFIG !== 'undefined' && CONFIG.API_LEAD_ENDPOINT) || '/lead';
 const SECURITY_CONFIG = (typeof CONFIG !== 'undefined' && CONFIG.SECURITY) || {};
 const TURNSTILE_CONFIG = SECURITY_CONFIG.TURNSTILE || {};
 const TURNSTILE_FAIL_OPEN = TURNSTILE_CONFIG.FAIL_OPEN !== false;
@@ -613,7 +614,7 @@ async function fetchAPI(endpoint, options = {}) {
                 method,
                 preview: preview.slice(0, 300)
             });
-            throw new Error('O servidor retornou HTML em vez de JSON. Verifique se a API /api/lead está ativa.');
+            throw new Error('O servidor retornou HTML em vez de JSON. Verifique se o endpoint da API está correto e ativo.');
         }
 
         const data = await response.json();
@@ -1110,7 +1111,7 @@ async function submitForm(event) {
     try {
         // Enviar para API
         formDebug('Submitting payload to API', {
-            endpoint: '/lead',
+            endpoint: API_LEAD_ENDPOINT,
             apiBaseUrl: API_BASE_URL,
             hasTurnstileHeader: Boolean(turnstileToken),
             payloadPreview: {
@@ -1122,7 +1123,7 @@ async function submitForm(event) {
                 vencimentovisto: formData.vencimentovisto
             }
         });
-        const response = await fetchAPI('/lead', {
+        const response = await fetchAPI(API_LEAD_ENDPOINT, {
             method: 'POST',
             headers: turnstileToken ? { 'cf-turnstile-response': turnstileToken } : {},
             body: JSON.stringify(formData)
