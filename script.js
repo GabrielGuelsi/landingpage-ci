@@ -560,8 +560,10 @@ function setLocale(locale, updateUrl = true) {
 // Função para fazer requisições à API
 async function fetchAPI(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
+    const apiToken = (typeof CONFIG !== 'undefined' && CONFIG.API_TOKEN) ? String(CONFIG.API_TOKEN) : '';
     const headers = {
         'Content-Type': 'application/json',
+        ...(apiToken ? { 'Authorization': apiToken } : {}),
         ...options.headers
     };
     const method = options.method || 'GET';
