@@ -17,6 +17,46 @@ const SUPPORTED_LOCALES = ['pt', 'en', 'es'];
 const DEFAULT_LOCALE = 'pt';
 const LOCALE_STORAGE_KEY = 'ci_landing_locale';
 let currentLocale = DEFAULT_LOCALE;
+const FORM_DEBUG_ENABLED = true;
+
+function debugTimestamp() {
+    return new Date().toISOString();
+}
+
+function maskForLog(value, kind) {
+    const str = String(value || '');
+    if (!str) return str;
+    if (kind === 'email') {
+        const [user, domain] = str.split('@');
+        if (!domain) return '***';
+        return `${(user || '').slice(0, 2)}***@${domain}`;
+    }
+    if (kind === 'phone') {
+        const clean = str.replace(/\s+/g, ' ').trim();
+        if (clean.length <= 6) return '***';
+        return `${clean.slice(0, 4)}***${clean.slice(-2)}`;
+    }
+    if (kind === 'name') {
+        if (str.length <= 3) return '***';
+        return `${str.slice(0, 2)}***`;
+    }
+    return str;
+}
+
+function formDebug(step, details = {}) {
+    if (!FORM_DEBUG_ENABLED) return;
+    console.log(`[FORM DEBUG][${debugTimestamp()}] ${step}`, details);
+}
+
+function formWarn(step, details = {}) {
+    if (!FORM_DEBUG_ENABLED) return;
+    console.warn(`[FORM DEBUG][${debugTimestamp()}] ${step}`, details);
+}
+
+function formError(step, details = {}) {
+    if (!FORM_DEBUG_ENABLED) return;
+    console.error(`[FORM DEBUG][${debugTimestamp()}] ${step}`, details);
+}
 
 const I18N = {
     pt: {
@@ -524,6 +564,14 @@ async function fetchAPI(endpoint, options = {}) {
         'Content-Type': 'application/json',
         ...options.headers
     };
+    const method = options.method || 'GET';
+
+    formDebug('API request started', {
+        url,
+        method,
+        hasBody: Boolean(options.body),
+        headers
+    });
 
     try {
         const response = await fetch(url, {
@@ -531,22 +579,64 @@ async function fetchAPI(endpoint, options = {}) {
             headers
         });
 
+        const contentType = response.headers.get('content-type') || '';
+        const isJsonResponse = contentType.includes('application/json');
+        formDebug('API response received', {
+            url,
+            method,
+            status: response.status,
+            ok: response.ok,
+            contentType,
+            isJsonResponse
+        });
+
         // Verificar se a resposta é OK
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ mensagem: 'Erro na requisição' }));
-            console.error('Erro na API:', response.status, errorData);
+            const errorData = isJsonResponse
+                ? await response.json().catch(() => ({ mensagem: 'Erro na requisição' }))
+                : { mensagem: `Resposta inválida do servidor (${response.status})` };
+            formError('API returned non-OK status', {
+                url,
+                method,
+                status: response.status,
+                errorData
+            });
             throw new Error(errorData.mensagem || `Erro ${response.status}: ${response.statusText}`);
         }
 
+        if (!isJsonResponse) {
+            const preview = await response.text().catch(() => '');
+            formError('API returned non-JSON body', {
+                url,
+                method,
+                preview: preview.slice(0, 300)
+            });
+            throw new Error('O servidor retornou HTML em vez de JSON. Verifique se a API /api/lead está ativa.');
+        }
+
         const data = await response.json();
+        formDebug('API JSON parsed successfully', {
+            url,
+            method,
+            data
+        });
         return data;
     } catch (error) {
         // Verificar se é erro de CORS
         if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
-            console.error('Erro de CORS: Certifique-se de que está usando um servidor HTTP (não file://)');
+            formError('Network/CORS fetch failure', {
+                url,
+                method,
+                error: error.message
+            });
             throw new Error('Erro de conexão. Certifique-se de que está usando um servidor HTTP local ou hospedado.');
         }
-        console.error('Erro na requisição:', error);
+        formError('Unhandled API fetch error', {
+            url,
+            method,
+            error: error.message,
+            stack: error.stack
+        });
         throw error;
     }
 }
@@ -880,6 +970,25 @@ function collectFormData(rawFormData) {
     if (urlParams.get('utm_campaign')) data.campaing = urlParams.get('utm_campaign');
     if (urlParams.get('utm_term')) data.term = urlParams.get('utm_term');
     if (urlParams.get('gclid')) data.gclid = urlParams.get('gclid');
+
+    formDebug('Form data collected', {
+        nomecontato: maskForLog(data.nomecontato, 'name'),
+        emailcontato: maskForLog(data.emailcontato, 'email'),
+        telefonecontato: maskForLog(data.telefonecontato, 'phone'),
+        dditelefonecontato: data.dditelefonecontato,
+        nivelingles: data.nivelingles,
+        vencimentovisto: data.vencimentovisto,
+        idunidade: data.idunidade,
+        idprograma: data.idprograma || null,
+        idpais: data.idpais || null,
+        recebeemail: data.recebeemail,
+        recebesms: data.recebesms,
+        hasUtmSource: Boolean(data.source),
+        hasUtmMedium: Boolean(data.medium),
+        hasUtmCampaign: Boolean(data.campaing),
+        hasUtmTerm: Boolean(data.term),
+        hasGclid: Boolean(data.gclid)
+    });
     
     return data;
 }
@@ -887,6 +996,11 @@ function collectFormData(rawFormData) {
 // Função para enviar formulário
 async function submitForm(event) {
     event.preventDefault();
+    formDebug('Submit triggered', {
+        locale: currentLocale,
+        path: window.location.pathname,
+        query: window.location.search
+    });
 
     const submitBtn = document.getElementById('submitBtn');
     const btnText = submitBtn.querySelector('.btn-text');
@@ -901,26 +1015,45 @@ async function submitForm(event) {
 
     const rawFormData = getRawFormData();
     if (!rawFormData) {
+        formError('Submit aborted: could not read raw form data');
         showMessage(tr('validation.readError'), 'error');
         return;
     }
 
     const honeypotValue = getHoneypotValue(rawFormData);
     if (honeypotValue) {
+        formWarn('Submit blocked by honeypot', { honeypotFilled: true });
         return;
     }
 
     const elapsedMs = getFormElapsedMs(rawFormData);
+    formDebug('Security timing evaluated', {
+        elapsedMs,
+        minRequiredMs: Number(SECURITY_CONFIG.MIN_SUBMIT_TIME_MS || 0)
+    });
     const minTimeValidation = validateMinimumSubmitTime(elapsedMs);
     if (!minTimeValidation.valid) {
         const remainingSeconds = Math.max(1, Math.ceil(minTimeValidation.remainingMs / 1000));
+        formWarn('Submit blocked: minimum submit time not reached', {
+            elapsedMs,
+            remainingMs: minTimeValidation.remainingMs
+        });
         showMessage(tr('validation.minSubmitTime', { seconds: remainingSeconds }), 'error');
         return;
     }
 
     const rateLimitValidation = validateRateLimit();
+    formDebug('Rate limit evaluated', {
+        valid: rateLimitValidation.valid,
+        attemptsInWindow: rateLimitValidation.attempts.length,
+        maxAttempts: Number(SECURITY_CONFIG.RATE_LIMIT_MAX_ATTEMPTS || 3)
+    });
     if (!rateLimitValidation.valid) {
         const waitMinutes = Math.max(1, Math.ceil(rateLimitValidation.remainingMs / 60000));
+        formWarn('Submit blocked: rate limit exceeded', {
+            remainingMs: rateLimitValidation.remainingMs,
+            attemptsInWindow: rateLimitValidation.attempts.length
+        });
         showMessage(tr('validation.rateLimit', { minutes: waitMinutes }), 'error');
         return;
     }
@@ -935,6 +1068,7 @@ async function submitForm(event) {
 
     const errors = validateForm(formData);
     if (errors.length > 0) {
+        formWarn('Submit blocked: validation errors', { errors });
         showMessage(errors.join(', '), 'error');
         resetSubmitButton();
         return;
@@ -944,13 +1078,23 @@ async function submitForm(event) {
     let captchaBypassed = false;
     if (TURNSTILE_CONFIG.ENABLED) {
         const forceChallenge = shouldForceTurnstileChallenge(elapsedMs, rateLimitValidation.attempts.length);
+        formDebug('Turnstile check started', {
+            enabled: true,
+            forceChallenge
+        });
         turnstileToken = await getTurnstileToken(forceChallenge);
+        formDebug('Turnstile token result', {
+            hasToken: Boolean(turnstileToken),
+            tokenLength: turnstileToken ? turnstileToken.length : 0
+        });
 
         if (!turnstileToken) {
             if (TURNSTILE_FAIL_OPEN) {
                 captchaBypassed = true;
+                formWarn('Turnstile failed but continuing due to fail-open config');
                 showMessage(tr('validation.captchaUnstable'), 'warning');
             } else {
+                formError('Submit blocked: turnstile token missing and fail-open disabled');
                 showMessage(tr('validation.captchaError'), 'error');
                 resetSubmitButton();
                 return;
@@ -959,14 +1103,29 @@ async function submitForm(event) {
     }
 
     registerRateLimitAttempt();
+    formDebug('Rate limit attempt registered');
 
     try {
         // Enviar para API
+        formDebug('Submitting payload to API', {
+            endpoint: '/lead',
+            apiBaseUrl: API_BASE_URL,
+            hasTurnstileHeader: Boolean(turnstileToken),
+            payloadPreview: {
+                nomecontato: maskForLog(formData.nomecontato, 'name'),
+                emailcontato: maskForLog(formData.emailcontato, 'email'),
+                telefonecontato: maskForLog(formData.telefonecontato, 'phone'),
+                idunidade: formData.idunidade,
+                nivelingles: formData.nivelingles,
+                vencimentovisto: formData.vencimentovisto
+            }
+        });
         const response = await fetchAPI('/lead', {
             method: 'POST',
             headers: turnstileToken ? { 'cf-turnstile-response': turnstileToken } : {},
             body: JSON.stringify(formData)
         });
+        formDebug('API response processed in submit', { response });
 
         if (response.sucesso) {
             const successMsg = response.mensagem || 
@@ -976,6 +1135,11 @@ async function submitForm(event) {
                 ? `${successMsg} ${tr('validation.captchaNote')}`
                 : successMsg;
             showMessage(finalMsg, 'success');
+            formDebug('Submit finished with success', {
+                sucesso: true,
+                captchaBypassed,
+                captchaWarning: Boolean(response.captcha_warning)
+            });
             
             // Limpar formulário após sucesso
             document.getElementById('contactForm').reset();
@@ -991,19 +1155,54 @@ async function submitForm(event) {
         } else {
             const errorMsg = response.mensagem || 
                 tr('validation.errorDefault');
+            formWarn('Submit finished with API business error', {
+                sucesso: false,
+                mensagem: response.mensagem
+            });
             showMessage(errorMsg, 'error');
         }
     } catch (error) {
-        console.error('Erro ao enviar formulário:', error);
+        formError('Submit exception', {
+            message: error.message,
+            stack: error.stack
+        });
         const networkError = tr('validation.networkError');
         showMessage(networkError, 'error');
     } finally {
+        formDebug('Submit flow finalized (finally block)');
         resetSubmitButton();
     }
 }
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
+    formDebug('DOMContentLoaded', {
+        path: window.location.pathname,
+        query: window.location.search,
+        origin: window.location.origin,
+        apiBaseUrl: API_BASE_URL,
+        turnstileEnabled: Boolean(TURNSTILE_CONFIG.ENABLED),
+        turnstileHasSiteKey: Boolean(TURNSTILE_CONFIG.SITE_KEY),
+        securityEnabled: isSecurityEnabled()
+    });
+
+    window.addEventListener('error', (event) => {
+        formError('Global JS error captured', {
+            message: event.message,
+            source: event.filename,
+            line: event.lineno,
+            column: event.colno
+        });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        const reason = event.reason || {};
+        formError('Unhandled promise rejection captured', {
+            message: reason.message || String(reason),
+            stack: reason.stack || null
+        });
+    });
+
     const initialLocale = getInitialLocale();
     setLocale(initialLocale, false);
 
@@ -1113,8 +1312,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (this.hasAttribute('data-open-form')) {
                 return;
             }
+            const href = this.getAttribute('href') || '';
+            if (href === '#' || href.trim() === '') {
+                e.preventDefault();
+                return;
+            }
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) {
                 target.scrollIntoView({
                     behavior: 'smooth',
