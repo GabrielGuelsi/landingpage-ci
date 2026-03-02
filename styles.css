@@ -78,9 +78,21 @@ body {
 
 .header-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     gap: 0.75rem;
+}
+
+.header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.header-cta {
+    display: flex;
+    align-items: center;
 }
 
 .logo {
@@ -92,12 +104,12 @@ body {
 .header-button {
     background: var(--primary-color);
     color: var(--white);
-    padding: 0.7rem 1rem;
+    padding: 0.6rem 0.9rem;
     border-radius: 9px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     box-shadow: var(--shadow-orange);
     white-space: nowrap;
     flex-shrink: 0;
@@ -107,6 +119,83 @@ body {
     background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(243, 116, 0, 0.5);
+}
+
+.language-switcher-flags {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.language-flag-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+    text-decoration: none;
+}
+
+@media (min-width: 640px) {
+    .language-flag-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+    }
+}
+
+@media (min-width: 992px) {
+    .language-flag-btn {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+}
+
+.language-flag-btn:active {
+    transform: scale(0.95);
+}
+
+.language-flag-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(243, 116, 0, 0.3);
+    border-color: var(--primary-color);
+}
+
+@media (hover: none) {
+    .language-flag-btn:hover {
+        transform: scale(1);
+    }
+}
+
+.language-flag-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(243, 116, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.language-flag-btn.active:active {
+    transform: scale(1);
+}
+
+.language-flag-btn.active span {
+    filter: brightness(1.2);
 }
 
 /* Hero Section com Formulário - MOBILE FIRST */
@@ -614,6 +703,13 @@ body {
     background: #fee2e2;
     color: var(--error);
     border: 2px solid var(--error);
+    display: block;
+}
+
+.form-message.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 2px solid #f59e0b;
     display: block;
 }
 
@@ -1179,13 +1275,17 @@ body {
         padding: 1rem 0;
     }
 
+    .header-actions {
+        gap: 0.75rem;
+    }
+
     .logo {
         height: 50px;
     }
 
     .header-button {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.95rem;
+        padding: 0.68rem 1.25rem;
+        font-size: 0.88rem;
     }
 
     .hero-with-form {

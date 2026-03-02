@@ -26,7 +26,8 @@ const CONFIG = {
             ENABLED: false,
             SITE_KEY: '',
             ACTION: 'lead_form',
-            FALLBACK_TO_VISIBLE_CHALLENGE: true
+            FALLBACK_TO_VISIBLE_CHALLENGE: true,
+            FAIL_OPEN: true
         }
     }
 };

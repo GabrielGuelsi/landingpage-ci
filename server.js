@@ -17,6 +17,7 @@ const SPREAD_API_TOKEN = process.env.SPREAD_API_TOKEN || '';
 const TURNSTILE_SITE_KEY = process.env.TURNSTILE_SITE_KEY || '';
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '';
 const TURNSTILE_VERIFY_URL = process.env.TURNSTILE_VERIFY_URL || 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+const TURNSTILE_FAIL_OPEN = process.env.TURNSTILE_FAIL_OPEN !== 'false';
 
 const FORM_MIN_SUBMIT_TIME_MS = Number(process.env.FORM_MIN_SUBMIT_TIME_MS || 3000);
 const FORM_RATE_LIMIT_WINDOW_MS = Number(process.env.FORM_RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
@@ -82,7 +83,8 @@ function handlePublicConfig(_req, res) {
         ENABLED: Boolean(TURNSTILE_SITE_KEY),
         SITE_KEY: TURNSTILE_SITE_KEY,
         ACTION: 'lead_form',
-        FALLBACK_TO_VISIBLE_CHALLENGE: true
+        FALLBACK_TO_VISIBLE_CHALLENGE: true,
+        FAIL_OPEN: TURNSTILE_FAIL_OPEN
       }
     }
   };
@@ -148,10 +150,19 @@ async function handleLeadSubmit(req, res) {
   }
 
   const turnstileToken = String(req.headers['cf-turnstile-response'] || '');
-  const turnstileOk = await verifyTurnstile(turnstileToken, ip);
-  if (!turnstileOk) {
-    registerAttempt(ip);
-    return sendJson(res, 403, { sucesso: false, mensagem: 'Falha na validação de segurança.' });
+  let captchaBypassed = false;
+
+  if (Boolean(TURNSTILE_SITE_KEY)) {
+    const turnstileResult = await verifyTurnstile(turnstileToken, ip);
+    if (!turnstileResult.ok) {
+      if (!TURNSTILE_FAIL_OPEN) {
+        registerAttempt(ip);
+        return sendJson(res, 403, { sucesso: false, mensagem: 'Falha na validação de segurança.' });
+      }
+
+      captchaBypassed = true;
+      console.warn('[WARN] CAPTCHA em fail-open. Motivo:', turnstileResult.reason);
+    }
   }
 
   const errors = validateBusinessPayload(body);
@@ -183,8 +194,16 @@ async function handleLeadSubmit(req, res) {
       });
     }
 
+    const finalResponse = (responseData && typeof responseData === 'object')
+      ? { ...responseData }
+      : { sucesso: true, mensagem: 'Formulário enviado com sucesso!' };
+
+    if (captchaBypassed) {
+      finalResponse.captcha_warning = true;
+    }
+
     clearAttempts(ip);
-    return sendJson(res, 200, responseData);
+    return sendJson(res, 200, finalResponse);
   } catch (error) {
     console.error('[ERROR] Falha ao chamar API externa:', error);
     registerAttempt(ip);
@@ -288,8 +307,8 @@ function validateBusinessPayload(body) {
 }
 
 async function verifyTurnstile(token, remoteip) {
-  if (!TURNSTILE_SECRET_KEY) return false;
-  if (!token) return false;
+  if (!TURNSTILE_SECRET_KEY) return { ok: false, reason: 'secret-missing' };
+  if (!token) return { ok: false, reason: 'token-missing' };
 
   try {
     const formData = new URLSearchParams();
@@ -305,19 +324,19 @@ async function verifyTurnstile(token, remoteip) {
 
     if (!response.ok) {
       console.error('[ERROR] Turnstile verify falhou com status:', response.status);
-      return false;
+      return { ok: false, reason: `verify-status-${response.status}` };
     }
 
     const data = await response.json();
     if (!data.success) {
       console.warn('[WARN] Turnstile inválido:', data['error-codes'] || []);
-      return false;
+      return { ok: false, reason: 'verify-failed' };
     }
 
-    return true;
+    return { ok: true, reason: 'ok' };
   } catch (error) {
     console.error('[ERROR] Falha na validação do Turnstile:', error);
-    return false;
+    return { ok: false, reason: 'verify-exception' };
   }
 }
 
