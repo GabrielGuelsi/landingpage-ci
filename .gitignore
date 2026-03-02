@@ -17,5 +17,7 @@ npm-debug.log*
 *.tmp
 *.temp
 
-# Configurações locais (opcional - descomente se quiser ignorar)
-# config.js
+# Secrets e configuração local
+.env
+.env.*
+!.env.example

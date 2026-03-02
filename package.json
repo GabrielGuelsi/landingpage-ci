@@ -1,0 +1,13 @@
+{
+  "name": "landingpage-ci",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page CI Irlanda com backend seguro para produção",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

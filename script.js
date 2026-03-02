@@ -1,13 +1,21 @@
 // Configuração da API
 // Use CONFIG do arquivo config.js se disponível, senão use valores padrão
-const API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_BASE_URL) || 'https://goireland.ci.com.br/api';
-const API_TOKEN = (typeof CONFIG !== 'undefined' && CONFIG.API_TOKEN) || 'eyJzdWIiOiIy0DAwMDcwMyIsIm5hbWUiOiJNWVRNIE9maWNpYWwiLCJpYXQiOjE1MTYyMzkwMjJ9'; // Substitua pela sua chave de autorização
+const API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_BASE_URL) || '/api';
+const SECURITY_CONFIG = (typeof CONFIG !== 'undefined' && CONFIG.SECURITY) || {};
+const TURNSTILE_CONFIG = SECURITY_CONFIG.TURNSTILE || {};
+
+const formSecurityState = {
+    startTimestamp: Date.now(),
+    touchedFields: new Set(),
+    turnstileWidgetId: null,
+    turnstileVisible: false,
+    turnstileToken: ''
+};
 
 // Função para fazer requisições à API
 async function fetchAPI(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
-        'Authorization': API_TOKEN,
         'Content-Type': 'application/json',
         ...options.headers
     };
@@ -85,6 +93,193 @@ function showMessage(message, type = 'success') {
     }
 }
 
+function isSecurityEnabled() {
+    return SECURITY_CONFIG.ENABLED !== false;
+}
+
+function getRawFormData() {
+    const form = document.getElementById('contactForm');
+    if (!form) return null;
+    return new FormData(form);
+}
+
+function getHoneypotValue(rawFormData) {
+    if (!isSecurityEnabled() || !rawFormData) return '';
+    const fieldName = SECURITY_CONFIG.HONEYPOT_FIELD || 'company_website';
+    return String(rawFormData.get(fieldName) || '').trim();
+}
+
+function getFormElapsedMs(rawFormData) {
+    const startedAtFromField = Number(rawFormData && rawFormData.get('form_started_at'));
+    const startedAt = Number.isFinite(startedAtFromField) && startedAtFromField > 0
+        ? startedAtFromField
+        : formSecurityState.startTimestamp;
+    return Date.now() - startedAt;
+}
+
+function validateMinimumSubmitTime(elapsedMs) {
+    if (!isSecurityEnabled()) return { valid: true, remainingMs: 0 };
+    const minSubmitTime = Number(SECURITY_CONFIG.MIN_SUBMIT_TIME_MS || 0);
+    if (elapsedMs >= minSubmitTime) return { valid: true, remainingMs: 0 };
+    return { valid: false, remainingMs: minSubmitTime - elapsedMs };
+}
+
+function getRateLimitAttempts() {
+    const storageKey = SECURITY_CONFIG.RATE_LIMIT_STORAGE_KEY || 'ci_form_rate_limit_v1';
+    const windowMs = Number(SECURITY_CONFIG.RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
+    const now = Date.now();
+
+    try {
+        const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const validAttempts = current.filter((timestamp) => Number(timestamp) > (now - windowMs));
+        localStorage.setItem(storageKey, JSON.stringify(validAttempts));
+        return validAttempts;
+    } catch (error) {
+        console.warn('Não foi possível acessar o localStorage para rate limit:', error);
+        return [];
+    }
+}
+
+function validateRateLimit() {
+    if (!isSecurityEnabled()) return { valid: true, remainingMs: 0, attempts: [] };
+    const maxAttempts = Number(SECURITY_CONFIG.RATE_LIMIT_MAX_ATTEMPTS || 3);
+    const windowMs = Number(SECURITY_CONFIG.RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
+    const attempts = getRateLimitAttempts();
+    if (attempts.length < maxAttempts) return { valid: true, remainingMs: 0, attempts };
+
+    const firstAttemptInWindow = attempts[0] || Date.now();
+    const remainingMs = Math.max(0, (firstAttemptInWindow + windowMs) - Date.now());
+    return { valid: false, remainingMs, attempts };
+}
+
+function registerRateLimitAttempt() {
+    if (!isSecurityEnabled()) return;
+    const storageKey = SECURITY_CONFIG.RATE_LIMIT_STORAGE_KEY || 'ci_form_rate_limit_v1';
+    const attempts = getRateLimitAttempts();
+    attempts.push(Date.now());
+    try {
+        localStorage.setItem(storageKey, JSON.stringify(attempts));
+    } catch (error) {
+        console.warn('Não foi possível registrar tentativa no rate limit:', error);
+    }
+}
+
+function shouldForceTurnstileChallenge(elapsedMs, attemptsInWindow) {
+    const minSubmitTime = Number(SECURITY_CONFIG.MIN_SUBMIT_TIME_MS || 0);
+    const touchedCount = formSecurityState.touchedFields.size;
+    const veryFastSubmit = elapsedMs < (minSubmitTime + 2000);
+    const lowInteraction = touchedCount <= 1;
+    const manyAttempts = attemptsInWindow >= Math.max(1, Number(SECURITY_CONFIG.RATE_LIMIT_MAX_ATTEMPTS || 3) - 1);
+    return veryFastSubmit || lowInteraction || manyAttempts;
+}
+
+function toggleTurnstileContainer(show) {
+    const container = document.getElementById('turnstileContainer');
+    if (!container) return;
+    container.classList.toggle('is-visible', show);
+}
+
+function renderTurnstile(forceVisible = false) {
+    if (!TURNSTILE_CONFIG.ENABLED || !TURNSTILE_CONFIG.SITE_KEY) return null;
+    if (typeof window.turnstile === 'undefined') return null;
+
+    const container = document.getElementById('turnstileContainer');
+    if (!container) return null;
+
+    if (formSecurityState.turnstileWidgetId && formSecurityState.turnstileVisible === forceVisible) {
+        return formSecurityState.turnstileWidgetId;
+    }
+
+    if (formSecurityState.turnstileWidgetId) {
+        window.turnstile.remove(formSecurityState.turnstileWidgetId);
+        formSecurityState.turnstileWidgetId = null;
+    }
+
+    toggleTurnstileContainer(forceVisible);
+    formSecurityState.turnstileVisible = forceVisible;
+    formSecurityState.turnstileToken = '';
+
+    const widgetId = window.turnstile.render(container, {
+        sitekey: TURNSTILE_CONFIG.SITE_KEY,
+        action: TURNSTILE_CONFIG.ACTION || 'lead_form',
+        appearance: forceVisible ? 'always' : 'execute',
+        execution: 'execute',
+        callback: (token) => {
+            formSecurityState.turnstileToken = token;
+        },
+        'error-callback': () => {
+            formSecurityState.turnstileToken = '';
+        },
+        'expired-callback': () => {
+            formSecurityState.turnstileToken = '';
+        }
+    });
+
+    formSecurityState.turnstileWidgetId = widgetId;
+    return widgetId;
+}
+
+function waitForTurnstileToken(timeoutMs = 5000) {
+    return new Promise((resolve) => {
+        const intervalMs = 100;
+        const timeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            resolve('');
+        }, timeoutMs);
+
+        const intervalId = setInterval(() => {
+            if (formSecurityState.turnstileToken) {
+                clearTimeout(timeoutId);
+                clearInterval(intervalId);
+                resolve(formSecurityState.turnstileToken);
+            }
+        }, intervalMs);
+    });
+}
+
+async function getTurnstileToken(forceVisibleChallenge) {
+    if (!TURNSTILE_CONFIG.ENABLED) return '';
+    const widgetId = renderTurnstile(forceVisibleChallenge);
+    if (!widgetId) return '';
+
+    formSecurityState.turnstileToken = '';
+    window.turnstile.execute(widgetId);
+
+    let token = await waitForTurnstileToken(forceVisibleChallenge ? 120000 : 5000);
+    const allowFallback = TURNSTILE_CONFIG.FALLBACK_TO_VISIBLE_CHALLENGE !== false;
+
+    if (!token && !forceVisibleChallenge && allowFallback) {
+        const visibleWidgetId = renderTurnstile(true);
+        if (!visibleWidgetId) return '';
+        window.turnstile.execute(visibleWidgetId);
+        token = await waitForTurnstileToken(120000);
+    }
+
+    return token;
+}
+
+function resetFormSecurityState() {
+    formSecurityState.startTimestamp = Date.now();
+    formSecurityState.touchedFields.clear();
+
+    const startedAtInput = document.getElementById('form_started_at');
+    if (startedAtInput) {
+        startedAtInput.value = String(formSecurityState.startTimestamp);
+    }
+}
+
+function initFormSecurityTracking(form) {
+    resetFormSecurityState();
+    const trackFieldTouch = (event) => {
+        if (event && event.target && event.target.name) {
+            formSecurityState.touchedFields.add(event.target.name);
+        }
+    };
+
+    form.addEventListener('input', trackFieldTouch);
+    form.addEventListener('change', trackFieldTouch);
+}
+
 // Função para validar formulário
 function validateForm(formData) {
     const errors = [];
@@ -119,9 +314,9 @@ function validateForm(formData) {
 }
 
 // Função para coletar dados do formulário
-function collectFormData() {
-    const form = document.getElementById('contactForm');
-    const formData = new FormData(form);
+function collectFormData(rawFormData) {
+    const formData = rawFormData || getRawFormData();
+    if (!formData) return {};
     
     // Separar DDI e telefone do campo único
     const telefoneCompleto = formData.get('telefonecontato') || '';
@@ -148,7 +343,9 @@ function collectFormData() {
         telefonecontato: telefonecontato,
         mensagem: mensagem,
         nivelingles: nivelIngles,
-        vencimentovisto: vencimentoVisto
+        vencimentovisto: vencimentoVisto,
+        form_started_at: Number(formData.get('form_started_at') || Date.now()),
+        company_website: String(formData.get('company_website') || '')
     };
 
     // ID da unidade (obrigatório pela API, usando valor padrão se não fornecido)
@@ -189,31 +386,74 @@ async function submitForm(event) {
     const submitBtn = document.getElementById('submitBtn');
     const btnText = submitBtn.querySelector('.btn-text');
     const btnLoader = submitBtn.querySelector('.btn-loader');
-    
+
+    const resetSubmitButton = () => {
+        submitBtn.disabled = false;
+        if (btnText) btnText.style.display = 'inline';
+        if (btnLoader) btnLoader.style.display = 'none';
+        if (!btnLoader) submitBtn.innerHTML = '<span class="btn-text">Enviar Formulário</span>';
+    };
+
+    const rawFormData = getRawFormData();
+    if (!rawFormData) {
+        showMessage('Erro ao ler os dados do formulário. Atualize a página e tente novamente.', 'error');
+        return;
+    }
+
+    const honeypotValue = getHoneypotValue(rawFormData);
+    if (honeypotValue) {
+        return;
+    }
+
+    const elapsedMs = getFormElapsedMs(rawFormData);
+    const minTimeValidation = validateMinimumSubmitTime(elapsedMs);
+    if (!minTimeValidation.valid) {
+        const remainingSeconds = Math.max(1, Math.ceil(minTimeValidation.remainingMs / 1000));
+        showMessage(`Confirme seus dados e tente novamente em ${remainingSeconds}s.`, 'error');
+        return;
+    }
+
+    const rateLimitValidation = validateRateLimit();
+    if (!rateLimitValidation.valid) {
+        const waitMinutes = Math.max(1, Math.ceil(rateLimitValidation.remainingMs / 60000));
+        showMessage(`Você atingiu o limite de tentativas. Tente novamente em ${waitMinutes} minuto(s).`, 'error');
+        return;
+    }
+
     // Desabilitar botão e mostrar loading
     submitBtn.disabled = true;
     if (btnText) btnText.style.display = 'none';
     if (btnLoader) btnLoader.style.display = 'inline';
     if (!btnLoader) submitBtn.textContent = 'Enviando...';
 
-    // Coletar dados
-    const formData = collectFormData();
+    const formData = collectFormData(rawFormData);
 
-    // Validar
     const errors = validateForm(formData);
     if (errors.length > 0) {
-            showMessage(errors.join(', '), 'error');
-            submitBtn.disabled = false;
-            if (btnText) btnText.style.display = 'inline';
-            if (btnLoader) btnLoader.style.display = 'none';
-            if (!btnLoader) submitBtn.innerHTML = '<span class="btn-text">Enviar Formulário</span>';
-            return;
+        showMessage(errors.join(', '), 'error');
+        resetSubmitButton();
+        return;
     }
+
+    let turnstileToken = '';
+    if (TURNSTILE_CONFIG.ENABLED) {
+        const forceChallenge = shouldForceTurnstileChallenge(elapsedMs, rateLimitValidation.attempts.length);
+        turnstileToken = await getTurnstileToken(forceChallenge);
+
+        if (!turnstileToken) {
+            showMessage('Não foi possível validar a segurança do formulário. Tente novamente.', 'error');
+            resetSubmitButton();
+            return;
+        }
+    }
+
+    registerRateLimitAttempt();
 
     try {
         // Enviar para API
-        const response = await fetchAPI('/comum/formulario/', {
+        const response = await fetchAPI('/lead', {
             method: 'POST',
+            headers: turnstileToken ? { 'cf-turnstile-response': turnstileToken } : {},
             body: JSON.stringify(formData)
         });
 
@@ -225,6 +465,9 @@ async function submitForm(event) {
             
             // Limpar formulário após sucesso
             document.getElementById('contactForm').reset();
+            resetFormSecurityState();
+            toggleTurnstileContainer(false);
+            formSecurityState.turnstileToken = '';
             
             // Resetar telefone para padrão irlandês
             const telefoneField = document.getElementById('telefonecontato');
@@ -243,11 +486,7 @@ async function submitForm(event) {
             'Erro ao enviar formulário. Por favor, verifique sua conexão e tente novamente.';
         showMessage(networkError, 'error');
     } finally {
-        // Reabilitar botão
-        submitBtn.disabled = false;
-        if (btnText) btnText.style.display = 'inline';
-        if (btnLoader) btnLoader.style.display = 'none';
-        if (!btnLoader) submitBtn.innerHTML = '<span class="btn-text">Enviar Formulário</span>';
+        resetSubmitButton();
     }
 }
 
@@ -341,6 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adicionar event listener ao formulário
     const form = document.getElementById('contactForm');
     if (form) {
+        initFormSecurityTracking(form);
         form.addEventListener('submit', submitForm);
     }
 
