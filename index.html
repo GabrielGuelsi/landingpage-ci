@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Já está na Irlanda? Faça sua matrícula em curso superior agora! Mais de 1200 cursos disponíveis. Suporte gratuito e completo para sua aplicação.">
     <title>CI Irlanda - Matrícula em Curso Superior | Já está na Irlanda?</title>
+    <link rel="icon" type="image/png" href="images/ci-logo.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,18 +21,18 @@
                     <div class="language-switcher">
                         <div class="language-switcher-flags">
                             <a href="#" class="language-flag-btn active" data-locale="pt" title="Português" aria-label="Português">
-                                <span class="text-xl sm:text-2xl">🇧🇷</span>
+                                <img src="images/flags/br.svg" alt="" class="language-flag-icon" aria-hidden="true">
                             </a>
                             <a href="#" class="language-flag-btn" data-locale="en" title="English" aria-label="English">
-                                <span class="text-xl sm:text-2xl">🇮🇪</span>
+                                <img src="images/flags/ie.svg" alt="" class="language-flag-icon" aria-hidden="true">
                             </a>
                             <a href="#" class="language-flag-btn" data-locale="es" title="Español" aria-label="Español">
-                                <span class="text-xl sm:text-2xl">🇪🇸</span>
+                                <img src="images/flags/es.svg" alt="" class="language-flag-icon" aria-hidden="true">
                             </a>
                         </div>
                     </div>
                     <div class="header-cta">
-                        <a href="#hero-form" class="header-button">Iniciar meu planejamento acadêmico</a>
+                        <a href="#hero-form" class="header-button">Iniciar meu planejamento</a>
                     </div>
                 </div>
             </div>
@@ -42,56 +43,19 @@
     <section class="hero-with-form">
         <video class="hero-video" autoplay muted loop playsinline>
             <source src="videos/campus-hero.mp4" type="video/mp4">
-            <img src="images/campus-hero.jpg" alt="Campus Universitário Irlandês" class="hero-video">
+            <img src="images/ci-ireland-office.jpg" alt="Campus Universitário Irlandês" class="hero-video">
         </video>
         <div class="hero-overlay"></div>
         
         <div class="container hero-container">
             <!-- Coluna Esquerda: Conteúdo -->
             <div class="hero-content-column">
-                <h1 class="hero-title">Escolher um curso superior na Irlanda não é sobre matrícula.</h1>
-                <h2 class="hero-title-2"><strong>É sobre o seu futuro.</strong> </h2>
-                <p class="hero-subtitle">Há <strong>9 anos</strong>, orientamos mais de <strong>8.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade.</p>
+                <h1 class="hero-title">Escolher um curso superior na Irlanda não é sobre matrícula</h1>
+                <h2 class="hero-title-2"><strong>É sobre o seu futuro</strong> </h2>
+                <p class="hero-subtitle">Há <strong>9 anos</strong>, orientamos mais de <strong>5.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade</p>
 
                 <!-- Benefícios Principais -->
-                <div class="hero-benefits-main">
-                    <h3 class="hero-benefits-title">Decisões bem orientadas começam com entendimento profundo do seu perfil:</h3>
-                    <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">✔</div>
-                        <div class="hero-benefit-content">
-                            <h3>Análise Estratégica Individual</h3>
-                            <p>Realizamos um diagnóstico do seu histórico e objetivos antes de qualquer recomendação. Cada orientação é personalizada e baseada no seu perfil real.</p>
-                        </div>
-                    </div>
-                    <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">✔</div>
-                        <div class="hero-benefit-content">
-                            <h3>Curadoria Criteriosa de Instituições</h3>
-                            <p>Indicamos programas que fortalecem seu currículo e ampliam suas oportunidades no mercado irlandês e mundial.</p>
-                        </div>
-                    </div>
-                    <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">✔</div>
-                        <div class="hero-benefit-content">
-                            <h3>Orientação especializada, sem honorários extras.</h3>
-                            <p>Não há cobrança adicional pela nossa consultoria. O investimento está apenas no valor do curso junto à instituição.</p>
-                        </div>
-                    </div>
-                    <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">✔</div>
-                        <div class="hero-benefit-content">
-                            <h3>Planejamento de Visto e Progressão de Carreira</h3>
-                            <p>Alinhamos sua escolha acadêmica à sua estratégia migratória e posicionamento profissional.</p>
-                        </div>
-                    </div>
-                    <div class="hero-benefit-card">
-                        <div class="hero-benefit-icon">✔</div>
-                        <div class="hero-benefit-content">
-                            <h3>Acompanhamento Consultivo do Diagnóstico à Matrícula</h3>
-                            <p>Conduzimos todo o processo com método, organização e orientação especializada até a matrícula.</p>
-                        </div>
-                    </div>
-                </div>
+                
 
             </div>
 
@@ -109,35 +73,31 @@
                         <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group field-half">
                         <label for="nomecontato">Nome Completo *</label>
                         <input type="text" id="nomecontato" name="nomecontato" required placeholder="Seu nome completo">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group field-half">
                         <label for="emailcontato">E-mail *</label>
                         <input type="email" id="emailcontato" name="emailcontato" required placeholder="seu@email.com">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group field-half">
                         <label for="telefonecontato">Telefone/WhatsApp *</label>
                         <input type="tel" id="telefonecontato" name="telefonecontato" required placeholder="+353 83 123 4567 ou +55 11 91234 5678">
                     </div>
 
-                    <div class="form-group">
-                        <label for="nivelingles">Qual seu nível de Inglês? *</label>
-                        <select id="nivelingles" name="nivelingles" required>
-                            <option value="">Selecione seu nível</option>
-                            <option value="Basico">Básico</option>
-                            <option value="Intermediario">Intermediário</option>
-                            <option value="Avancado">Avançado</option>
-                            <option value="Fluente">Fluente</option>
+                    <div class="form-group field-half">
+                        <label for="tipovisto">Tipo de visto *</label>
+                        <select id="tipovisto" name="tipovisto" required>
+                            <option value="">Selecione o visto</option>
+                            <option value="Stamp 2">Stamp 2</option>
+                            <option value="Stamp 4">Stamp 4</option>
+                            <option value="Stamp 1/1G">Stamp 1/1G</option>
+                            <option value="EU Passport">EU Passport</option>
+                            <option value="Other">Other</option>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="vencimentovisto">Quando vence o seu visto? *</label>
-                        <input type="date" id="vencimentovisto" name="vencimentovisto" required>
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
@@ -159,7 +119,7 @@
             <h2 class="section-title">Por que escolher a CI Irlanda?</h2>
             <div class="benefits-differential">
                 <h3>Porque nós entendemos as consequências da sua escolha.</h3>
-                <p>Ao longo de mais de 8.000 orientações acadêmicas, vimos como um curso bem escolhido acelera trajetórias,  e como uma decisão desalinhada pode limitar oportunidades.</p>
+                <p>Ao longo de mais de 5.000 orientações acadêmicas, vimos como um curso bem escolhido acelera trajetórias,  e como uma decisão desalinhada pode limitar oportunidades.</p>
             </div>
             <div class="benefits-marquee" aria-label="Diferenciais CI Irlanda">
                 <div class="benefits-track">
@@ -170,8 +130,8 @@
                     </article>
                     <article class="benefit-card benefit-card--marquee">
                         <div class="benefit-number">02</div>
-                        <h3>Mais de 8000 Alunos</h3>
-                        <p>Mais de 8000 histórias transformadas com aplicação, orientação e acompanhamento universitário.</p>
+                        <h3>Mais de 5000 Alunos</h3>
+                        <p>Mais de 5000 histórias transformadas com aplicação, orientação e acompanhamento universitário.</p>
                     </article>
                     <article class="benefit-card benefit-card--marquee">
                         <div class="benefit-number">03</div>
@@ -275,6 +235,32 @@
             <h2 class="final-cta-title">Orientação estratégica começa com o primeiro passo.</h2>
             <p class="final-cta-subtitle">Compartilhe os seus objetivos. Nossa equipe analisará seu caso para estruturar sua próxima decisão acadêmica na Irlanda.</p>
             <a href="#hero-form" class="final-cta-button">Solicitar minha análise personalizada</a>
+        </div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="reviews-section">
+        <div class="container">
+            <div class="reviews-header">
+                <h2 class="section-title">O que nossos alunos dizem:</h2>
+                <p class="reviews-subtitle">Avaliações de alunos que confiraram na CI irlanda.</p>
+                <div class="reviews-summary" id="reviewsSummary"></div>
+            </div>
+
+            <div class="reviews-carousel" data-reviews-carousel>
+                <button type="button" class="reviews-carousel-btn prev" aria-label="Avaliação anterior">‹</button>
+                <div class="reviews-track-wrapper">
+                    <div class="reviews-track" id="reviewsTrack">
+                        <article class="review-card review-skeleton">
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">Carregando avaliações...</p>
+                            <p class="review-author">Google Reviews</p>
+                        </article>
+                    </div>
+                </div>
+                <button type="button" class="reviews-carousel-btn next" aria-label="Próxima avaliação">›</button>
+            </div>
+            <div class="reviews-dots" id="reviewsDots" aria-label="Navegação de avaliações"></div>
         </div>
     </section>
 

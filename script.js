@@ -2,6 +2,7 @@
 // Use CONFIG do arquivo config.js se disponível, senão use valores padrão
 const API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_BASE_URL) || '/api';
 const API_LEAD_ENDPOINT = (typeof CONFIG !== 'undefined' && CONFIG.API_LEAD_ENDPOINT) || '/lead';
+const REVIEWS_ENDPOINT = (typeof CONFIG !== 'undefined' && CONFIG.REVIEWS_ENDPOINT) || '/api/reviews';
 const SECURITY_CONFIG = (typeof CONFIG !== 'undefined' && CONFIG.SECURITY) || {};
 const TURNSTILE_CONFIG = SECURITY_CONFIG.TURNSTILE || {};
 const TURNSTILE_FAIL_OPEN = TURNSTILE_CONFIG.FAIL_OPEN !== false;
@@ -64,10 +65,10 @@ const I18N = {
         pageTitle: 'CI Irlanda - Matrícula em Curso Superior | Já está na Irlanda?',
         pageDescription: 'Já está na Irlanda? Faça sua matrícula em curso superior agora! Mais de 1200 cursos disponíveis. Suporte gratuito e completo para sua aplicação.',
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
-        headerButton: 'Iniciar meu planejamento acadêmico',
-        heroTitle1: 'Escolher um curso superior na Irlanda não é sobre matrícula.',
-        heroTitle2: '<strong>É sobre o seu futuro.</strong>',
-        heroSubtitle: 'Há <strong>9 anos</strong>, orientamos mais de <strong>8.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade.',
+        headerButton: 'Iniciar meu planejamento',
+        heroTitle1: 'Escolher um curso superior na Irlanda não é sobre matrícula:',
+        heroTitle2: '<strong>É sobre o seu futuro!</strong>',
+        heroSubtitle: 'Há <strong>9 anos</strong>, orientamos mais de <strong>5.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade',
         heroBenefitsTitle: 'Decisões bem orientadas começam com entendimento profundo do seu perfil:',
         heroBenefits: [
             {
@@ -97,25 +98,24 @@ const I18N = {
                 name: 'Nome Completo *',
                 email: 'E-mail *',
                 phone: 'Telefone/WhatsApp *',
-                level: 'Qual seu nível de Inglês? *',
-                visa: 'Quando vence o seu visto? *'
+                visaType: 'Tipo de visto *'
             },
             placeholders: {
                 name: 'Seu nome completo',
                 email: 'seu@email.com',
                 phone: '+353 83 123 4567 ou +55 11 91234 5678'
             },
-            levelOptions: ['Selecione seu nível', 'Básico', 'Intermediário', 'Avançado', 'Fluente'],
+            visaTypeOptions: ['Selecione o visto', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Solicitar Contato',
             sending: 'Enviando...'
         },
         benefitsSection: {
             title: 'Por que escolher a CI Irlanda?',
             subtitleTitle: 'Porque nós entendemos as consequências da sua escolha.',
-            subtitleText: 'Ao longo de mais de 8.000 orientações acadêmicas, vimos como um curso bem escolhido acelera trajetórias,  e como uma decisão desalinhada pode limitar oportunidades.',
+            subtitleText: 'Ao longo de mais de 5.000 orientações acadêmicas, vimos como um curso bem escolhido acelera trajetórias,  e como uma decisão desalinhada pode limitar oportunidades.',
             cards: [
                 ['Mais de 1200 Cursos', 'Portfólio completo de universidades parceiras com graduações, pós-graduações e mestrados.'],
-                ['Mais de 8000 Alunos', 'Mais de 8000 histórias transformadas com aplicação, orientação e acompanhamento universitário.'],
+                ['Mais de 5000 Alunos', 'Mais de 5000 histórias transformadas com aplicação, orientação e acompanhamento universitário.'],
                 ['Loja Física na Irlanda', 'Presença física em Dublin para dar suporte completo durante sua jornada acadêmica.'],
                 ['Economia Real', 'Orientamos sem cobrança. O valor é só do programa na universidade parceira.'],
                 ['Visto e progressão acadêmica', 'Orientamos sua escolha considerando impacto no visto atual e nas próximas etapas da sua trajetória na Irlanda.'],
@@ -138,6 +138,20 @@ const I18N = {
             nextPhoto: 'Próxima foto',
             goToPhoto: 'Ir para foto'
         },
+        reviews: {
+            title: 'O que nossos alunos dizem:',
+            subtitle: 'Avaliações de alunos que confiraram na CI irlanda.',
+            prev: 'Avaliação anterior',
+            next: 'Próxima avaliação',
+            dots: 'Navegação de avaliações',
+            loading: 'Carregando avaliações...',
+            source: 'Google Reviews',
+            error: 'Não foi possível carregar as avaliações agora.',
+            fromGoogle: 'Avaliações no Google',
+            seeOriginal: 'Ver review no Google',
+            reviewDatePrefix: 'Publicado',
+            filteredBy: 'Mostrando apenas 4 e 5 estrelas'
+        },
         footer: {
             contactTitle: 'Contato',
             phone: '<strong>Telefone:</strong> +353 01 874 7095',
@@ -158,11 +172,10 @@ const I18N = {
             requiredEmail: 'E-mail válido é obrigatório',
             requiredPhone: 'Telefone é obrigatório',
             invalidPhone: 'Telefone deve incluir código do país e número completo',
-            requiredLevel: 'Nível de Inglês é obrigatório',
-            requiredVisa: 'Data de vencimento do visto é obrigatória',
+            requiredVisaType: 'Tipo de visto é obrigatório',
             captchaUnstable: 'Alerta: o CAPTCHA está instável no momento. Seu envio continuará normalmente.',
             captchaError: 'Não foi possível validar a segurança do formulário. Tente novamente.',
-            successDefault: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',
+            successDefault: 'Solicitação enviada com sucesso. Em breve, um especialista da CI Irlanda falará com você.',
             errorDefault: 'Erro ao enviar formulário. Por favor, tente novamente.',
             networkError: 'Erro ao enviar formulário. Por favor, verifique sua conexão e tente novamente.',
             captchaNote: 'Observação: houve instabilidade no CAPTCHA, mas seu formulário foi enviado com sucesso.'
@@ -173,9 +186,9 @@ const I18N = {
         pageDescription: 'Already in Ireland? Enroll in higher education now. More than 1,200 courses available with complete support for your application.',
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Start my academic planning',
-        heroTitle1: 'Choosing a higher education course in Ireland is not just about enrollment.',
-        heroTitle2: '<strong>It is about your future.</strong>',
-        heroSubtitle: 'For <strong>9 years</strong>, we have guided more than <strong>8,000 international students</strong> in strategic academic decisions aligned with visa, career, and employability goals.',
+        heroTitle1: 'Choosing a higher education course in Ireland is not just about enrollment',
+        heroTitle2: '<strong>It is about your future</strong>',
+        heroSubtitle: 'For <strong>9 years</strong>, we have guided more than <strong>5,000 international students</strong> in strategic academic decisions aligned with visa, career, and employability goals',
         heroBenefitsTitle: 'Well-informed decisions start with a deep understanding of your profile:',
         heroBenefits: [
             {
@@ -205,25 +218,24 @@ const I18N = {
                 name: 'Full Name *',
                 email: 'Email *',
                 phone: 'Phone/WhatsApp *',
-                level: 'What is your English level? *',
-                visa: 'When does your visa expire? *'
+                visaType: 'Visa type *'
             },
             placeholders: {
                 name: 'Your full name',
                 email: 'your@email.com',
                 phone: '+353 83 123 4567 or +55 11 91234 5678'
             },
-            levelOptions: ['Select your level', 'Basic', 'Intermediate', 'Advanced', 'Fluent'],
+            visaTypeOptions: ['Select visa type', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Request Contact',
             sending: 'Sending...'
         },
         benefitsSection: {
             title: 'Why choose CI Ireland?',
             subtitleTitle: 'Because we understand the consequences of your choice.',
-            subtitleText: 'After more than 8,000 academic guidance cases, we have seen how the right course accelerates careers, while a poor choice can limit opportunities.',
+            subtitleText: 'After more than 5,000 academic guidance cases, we have seen how the right course accelerates careers, while a poor choice can limit opportunities.',
             cards: [
                 ['More than 1,200 Courses', 'A complete portfolio of partner universities with undergraduate, postgraduate, and master programs.'],
-                ['More than 8,000 Students', 'More than 8,000 transformed stories with enrollment, guidance, and university support.'],
+                ['More than 5,000 Students', 'More than 5,000 transformed stories with enrollment, guidance, and university support.'],
                 ['Physical Office in Ireland', 'A physical office in Dublin to provide full support throughout your academic journey.'],
                 ['Real Savings', 'Our guidance is free of charge. You only pay the university program fee.'],
                 ['Visa and academic progression', 'We guide your choice considering your current visa impact and next steps in your journey in Ireland.'],
@@ -246,6 +258,20 @@ const I18N = {
             nextPhoto: 'Next photo',
             goToPhoto: 'Go to photo'
         },
+        reviews: {
+            title: 'What our students say:',
+            subtitle: 'Reviews from students who trusted CI Ireland.',
+            prev: 'Previous review',
+            next: 'Next review',
+            dots: 'Review navigation',
+            loading: 'Loading reviews...',
+            source: 'Google Reviews',
+            error: 'Could not load reviews right now.',
+            fromGoogle: 'Google Reviews',
+            seeOriginal: 'See review on Google',
+            reviewDatePrefix: 'Published',
+            filteredBy: 'Showing only 4 and 5-star reviews'
+        },
         footer: {
             contactTitle: 'Contact',
             phone: '<strong>Phone:</strong> +353 01 874 7095',
@@ -266,11 +292,10 @@ const I18N = {
             requiredEmail: 'A valid email is required',
             requiredPhone: 'Phone number is required',
             invalidPhone: 'Phone must include country code and full number',
-            requiredLevel: 'English level is required',
-            requiredVisa: 'Visa expiration date is required',
+            requiredVisaType: 'Visa type is required',
             captchaUnstable: 'Warning: CAPTCHA is unstable right now. Your submission will continue normally.',
             captchaError: 'Could not validate form security. Please try again.',
-            successDefault: 'Form submitted successfully! Our consultants will contact you soon.',
+            successDefault: 'Request sent successfully. A CI Ireland specialist will contact you shortly.',
             errorDefault: 'Error submitting form. Please try again.',
             networkError: 'Error submitting form. Please check your connection and try again.',
             captchaNote: 'Note: CAPTCHA was unstable, but your form was successfully submitted.'
@@ -281,9 +306,9 @@ const I18N = {
         pageDescription: '¿Ya estás en Irlanda? Matricúlate en educación superior ahora. Más de 1.200 cursos disponibles con soporte completo para tu aplicación.',
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Iniciar mi planificación académica',
-        heroTitle1: 'Elegir un curso superior en Irlanda no es solo una matrícula.',
-        heroTitle2: '<strong>Se trata de tu futuro.</strong>',
-        heroSubtitle: 'Hace <strong>9 años</strong>, orientamos a más de <strong>8.000 estudiantes internacionales</strong> en decisiones académicas estratégicas, alineadas con visa, carrera y empleabilidad.',
+        heroTitle1: 'Elegir un curso superior en Irlanda no es solo una matrícula',
+        heroTitle2: '<strong>Se trata de tu futuro</strong>',
+        heroSubtitle: 'Hace <strong>9 años</strong>, orientamos a más de <strong>5.000 estudiantes internacionales</strong> en decisiones académicas estratégicas, alineadas con visa, carrera y empleabilidad',
         heroBenefitsTitle: 'Las buenas decisiones comienzan con una comprensión profunda de tu perfil:',
         heroBenefits: [
             {
@@ -313,25 +338,24 @@ const I18N = {
                 name: 'Nombre Completo *',
                 email: 'Correo electrónico *',
                 phone: 'Teléfono/WhatsApp *',
-                level: '¿Cuál es tu nivel de inglés? *',
-                visa: '¿Cuándo vence tu visa? *'
+                visaType: 'Tipo de visa *'
             },
             placeholders: {
                 name: 'Tu nombre completo',
                 email: 'tu@email.com',
                 phone: '+353 83 123 4567 o +55 11 91234 5678'
             },
-            levelOptions: ['Selecciona tu nivel', 'Básico', 'Intermedio', 'Avanzado', 'Fluido'],
+            visaTypeOptions: ['Selecciona la visa', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Solicitar contacto',
             sending: 'Enviando...'
         },
         benefitsSection: {
             title: '¿Por qué elegir CI Irlanda?',
             subtitleTitle: 'Porque entendemos las consecuencias de tu elección.',
-            subtitleText: 'A lo largo de más de 8.000 orientaciones académicas, vimos cómo un curso bien elegido acelera trayectorias y cómo una decisión desalineada puede limitar oportunidades.',
+            subtitleText: 'A lo largo de más de 5.000 orientaciones académicas, vimos cómo un curso bien elegido acelera trayectorias y cómo una decisión desalineada puede limitar oportunidades.',
             cards: [
                 ['Más de 1.200 Cursos', 'Portafolio completo de universidades aliadas con licenciaturas, posgrados y maestrías.'],
-                ['Más de 8.000 Estudiantes', 'Más de 8.000 historias transformadas con aplicación, orientación y acompañamiento universitario.'],
+                ['Más de 5.000 Estudiantes', 'Más de 5.000 historias transformadas con aplicación, orientación y acompañamiento universitario.'],
                 ['Tienda Física en Irlanda', 'Presencia física en Dublín para brindar soporte completo durante tu jornada académica.'],
                 ['Ahorro Real', 'Orientamos sin costo. Solo pagas el valor del programa con la universidad.'],
                 ['Visa y progresión académica', 'Guiamos tu elección considerando el impacto en tu visa actual y las próximas etapas de tu trayectoria en Irlanda.'],
@@ -354,6 +378,20 @@ const I18N = {
             nextPhoto: 'Foto siguiente',
             goToPhoto: 'Ir a la foto'
         },
+        reviews: {
+            title: 'Qué dicen nuestros estudiantes:',
+            subtitle: 'Reseñas de estudiantes que confiaron en CI Irlanda.',
+            prev: 'Reseña anterior',
+            next: 'Próxima reseña',
+            dots: 'Navegación de reseñas',
+            loading: 'Cargando reseñas...',
+            source: 'Google Reviews',
+            error: 'No fue posible cargar las reseñas ahora.',
+            fromGoogle: 'Reseñas en Google',
+            seeOriginal: 'Ver reseña en Google',
+            reviewDatePrefix: 'Publicado',
+            filteredBy: 'Mostrando solo reseñas de 4 y 5 estrellas'
+        },
         footer: {
             contactTitle: 'Contacto',
             phone: '<strong>Teléfono:</strong> +353 01 874 7095',
@@ -374,11 +412,10 @@ const I18N = {
             requiredEmail: 'Un correo electrónico válido es obligatorio',
             requiredPhone: 'El teléfono es obligatorio',
             invalidPhone: 'El teléfono debe incluir código de país y número completo',
-            requiredLevel: 'El nivel de inglés es obligatorio',
-            requiredVisa: 'La fecha de vencimiento de la visa es obligatoria',
+            requiredVisaType: 'El tipo de visa es obligatorio',
             captchaUnstable: 'Aviso: el CAPTCHA está inestable en este momento. Tu envío continuará normalmente.',
             captchaError: 'No fue posible validar la seguridad del formulario. Inténtalo de nuevo.',
-            successDefault: '¡Formulario enviado con éxito! Nuestros consultores se pondrán en contacto pronto.',
+            successDefault: 'Solicitud enviada con éxito. En breve, un especialista de CI Irlanda se pondrá en contacto contigo.',
             errorDefault: 'Error al enviar el formulario. Por favor, inténtalo de nuevo.',
             networkError: 'Error al enviar el formulario. Revisa tu conexión e inténtalo de nuevo.',
             captchaNote: 'Nota: hubo inestabilidad en el CAPTCHA, pero tu formulario fue enviado correctamente.'
@@ -451,8 +488,7 @@ function applyLocalizedContent(locale) {
     setText('label[for="nomecontato"]', tr('form.labels.name'));
     setText('label[for="emailcontato"]', tr('form.labels.email'));
     setText('label[for="telefonecontato"]', tr('form.labels.phone'));
-    setText('label[for="nivelingles"]', tr('form.labels.level'));
-    setText('label[for="vencimentovisto"]', tr('form.labels.visa'));
+    setText('label[for="tipovisto"]', tr('form.labels.visaType'));
 
     const nomeInput = document.getElementById('nomecontato');
     const emailInput = document.getElementById('emailcontato');
@@ -461,10 +497,10 @@ function applyLocalizedContent(locale) {
     if (emailInput) emailInput.placeholder = tr('form.placeholders.email');
     if (telefoneInputEl) telefoneInputEl.placeholder = tr('form.placeholders.phone');
 
-    const levelSelect = document.getElementById('nivelingles');
-    if (levelSelect) {
-        Array.from(levelSelect.options).forEach((option, index) => {
-            const translated = I18N[currentLocale].form.levelOptions[index];
+    const visaTypeSelect = document.getElementById('tipovisto');
+    if (visaTypeSelect) {
+        Array.from(visaTypeSelect.options).forEach((option, index) => {
+            const translated = I18N[currentLocale].form.visaTypeOptions[index];
             if (translated) option.textContent = translated;
         });
     }
@@ -491,6 +527,18 @@ function applyLocalizedContent(locale) {
     setText('.final-cta-title', tr('finalCta.title'));
     setText('.final-cta-subtitle', tr('finalCta.subtitle'));
     setText('.final-cta-button', tr('finalCta.button'));
+
+    setText('.reviews-header .section-title', tr('reviews.title'));
+    setText('.reviews-subtitle', tr('reviews.subtitle'));
+    const reviewsCarousel = document.querySelector('[data-reviews-carousel]');
+    if (reviewsCarousel) {
+        const prevReviewBtn = reviewsCarousel.querySelector('.reviews-carousel-btn.prev');
+        const nextReviewBtn = reviewsCarousel.querySelector('.reviews-carousel-btn.next');
+        if (prevReviewBtn) prevReviewBtn.setAttribute('aria-label', tr('reviews.prev'));
+        if (nextReviewBtn) nextReviewBtn.setAttribute('aria-label', tr('reviews.next'));
+    }
+    const reviewsDots = document.getElementById('reviewsDots');
+    if (reviewsDots) reviewsDots.setAttribute('aria-label', tr('reviews.dots'));
 
     setText('.location-section .section-title', tr('location.title'));
     setText('.location-subtitle', tr('location.subtitle'));
@@ -644,6 +692,192 @@ async function fetchAPI(endpoint, options = {}) {
     }
 }
 
+function formatReviewDate(isoDate) {
+    if (!isoDate) return '';
+    try {
+        return new Date(isoDate).toLocaleDateString(currentLocale === 'pt' ? 'pt-BR' : currentLocale === 'es' ? 'es-ES' : 'en-IE', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit'
+        });
+    } catch (_error) {
+        return '';
+    }
+}
+
+function renderReviewStars(rating) {
+    const rounded = Math.max(0, Math.min(5, Number(rating || 0)));
+    const full = '★'.repeat(Math.round(rounded));
+    const empty = '☆'.repeat(5 - Math.round(rounded));
+    return `${full}${empty}`;
+}
+
+function createReviewCard(review) {
+    const card = document.createElement('article');
+    card.className = 'review-card';
+
+    const stars = document.createElement('div');
+    stars.className = 'review-stars';
+    stars.textContent = renderReviewStars(review.rating);
+    card.appendChild(stars);
+
+    const text = document.createElement('p');
+    text.className = 'review-text';
+    text.textContent = review.text;
+    card.appendChild(text);
+
+    const author = document.createElement('p');
+    author.className = 'review-author';
+    author.textContent = review.author || tr('reviews.source');
+    card.appendChild(author);
+
+    const dateValue = review.relativeTime || formatReviewDate(review.publishedAt);
+    if (dateValue) {
+        const time = document.createElement('p');
+        time.className = 'review-time';
+        time.textContent = `${tr('reviews.reviewDatePrefix')}: ${dateValue}`;
+        card.appendChild(time);
+    }
+
+    if (review.profileUrl) {
+        const link = document.createElement('a');
+        link.className = 'review-link';
+        link.href = review.profileUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = tr('reviews.seeOriginal');
+        card.appendChild(link);
+    }
+
+    return card;
+}
+
+function initReviewsCarousel(cardsCount) {
+    const carousel = document.querySelector('[data-reviews-carousel]');
+    const track = document.getElementById('reviewsTrack');
+    const dotsContainer = document.getElementById('reviewsDots');
+    if (!carousel || !track || !dotsContainer || cardsCount <= 0) return;
+
+    const prevBtn = carousel.querySelector('.reviews-carousel-btn.prev');
+    const nextBtn = carousel.querySelector('.reviews-carousel-btn.next');
+
+    const getCardsPerPage = () => {
+        if (window.innerWidth >= 1024) return 3;
+        if (window.innerWidth >= 768) return 2;
+        return 1;
+    };
+
+    let currentPage = 0;
+    const totalPages = () => Math.max(1, Math.ceil(cardsCount / getCardsPerPage()));
+
+    const renderDots = () => {
+        dotsContainer.innerHTML = '';
+        const pages = totalPages();
+        for (let i = 0; i < pages; i += 1) {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = `reviews-dot${i === currentPage ? ' is-active' : ''}`;
+            dot.setAttribute('aria-label', `${tr('reviews.next')} ${i + 1}`);
+            dot.addEventListener('click', () => {
+                currentPage = i;
+                update();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    };
+
+    const updateButtons = () => {
+        const pages = totalPages();
+        if (prevBtn) prevBtn.disabled = currentPage === 0;
+        if (nextBtn) nextBtn.disabled = currentPage >= pages - 1;
+    };
+
+    const update = () => {
+        const cardsPerPage = getCardsPerPage();
+        const pages = totalPages();
+        if (currentPage >= pages) currentPage = pages - 1;
+        const translate = currentPage * (100 / cardsPerPage);
+        track.style.transform = `translateX(-${translate}%)`;
+        updateButtons();
+        renderDots();
+    };
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            currentPage = Math.max(0, currentPage - 1);
+            update();
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentPage = Math.min(totalPages() - 1, currentPage + 1);
+            update();
+        });
+    }
+
+    window.addEventListener('resize', update);
+    update();
+}
+
+async function loadGoogleReviews() {
+    const track = document.getElementById('reviewsTrack');
+    const summary = document.getElementById('reviewsSummary');
+    if (!track || !summary) return;
+
+    formDebug('Reviews load started', { reviewsEndpoint: REVIEWS_ENDPOINT });
+
+    try {
+        const response = await fetch(REVIEWS_ENDPOINT, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+        if (!response.ok || !contentType.includes('application/json')) {
+            throw new Error('reviews-endpoint-invalid');
+        }
+
+        const payload = await response.json();
+        if (!payload || payload.sucesso !== true || !Array.isArray(payload.reviews)) {
+            throw new Error('reviews-payload-invalid');
+        }
+
+        const reviews = payload.reviews;
+        if (reviews.length === 0) {
+            throw new Error('reviews-empty');
+        }
+
+        summary.textContent = '';
+        track.innerHTML = '';
+        reviews.forEach((review) => {
+            track.appendChild(createReviewCard(review));
+        });
+        initReviewsCarousel(reviews.length);
+        formDebug('Reviews loaded successfully', { count: reviews.length });
+    } catch (error) {
+        formWarn('Reviews load failed', { message: error.message });
+        track.innerHTML = '';
+        const fallback = document.createElement('article');
+        fallback.className = 'review-card';
+        fallback.innerHTML = `
+            <div class="review-stars">★★★★☆</div>
+            <p class="review-text">${tr('reviews.error')}</p>
+            <p class="review-author">${tr('reviews.source')}</p>
+        `;
+        track.appendChild(fallback);
+        summary.textContent = '';
+        const carousel = document.querySelector('[data-reviews-carousel]');
+        if (carousel) {
+            const prevBtn = carousel.querySelector('.reviews-carousel-btn.prev');
+            const nextBtn = carousel.querySelector('.reviews-carousel-btn.next');
+            if (prevBtn) prevBtn.disabled = true;
+            if (nextBtn) nextBtn.disabled = true;
+        }
+    }
+}
+
 // Funções de carregamento removidas - não precisamos mais de unidades e programas no formulário
 
 // Máscara de telefone
@@ -682,13 +916,7 @@ function showMessage(message, type = 'success') {
     // Scroll suave até a mensagem
     messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    // Remover mensagem após timeout (apenas se for sucesso)
-    if (type === 'success') {
-        const timeout = (typeof CONFIG !== 'undefined' && CONFIG.SUCCESS_MESSAGE_TIMEOUT) || 5000;
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, timeout);
-    }
+    // Mensagens de sucesso permanecem visíveis para reforço de confirmação.
 }
 
 function isSecurityEnabled() {
@@ -900,12 +1128,8 @@ function validateForm(formData) {
         }
     }
 
-    if (!formData.nivelingles || formData.nivelingles.trim() === '') {
-        errors.push(tr('validation.requiredLevel'));
-    }
-
-    if (!formData.vencimentovisto || formData.vencimentovisto.trim() === '') {
-        errors.push(tr('validation.requiredVisa'));
+    if (!formData.tipovisto || formData.tipovisto.trim() === '') {
+        errors.push(tr('validation.requiredVisaType'));
     }
 
     return errors;
@@ -930,9 +1154,9 @@ function collectFormData(rawFormData) {
         }
     }
     
-    const nivelIngles = formData.get('nivelingles') || '';
-    const vencimentoVisto = formData.get('vencimentovisto') || '';
-    const mensagem = `Nível de Inglês: ${nivelIngles}. Vencimento do visto: ${vencimentoVisto}.`;
+    const tipoVisto = formData.get('tipovisto') || '';
+    const siteLanguage = (I18N[currentLocale] && I18N[currentLocale].languageNames[currentLocale]) || currentLocale;
+    const mensagem = `Idioma do site: ${siteLanguage}. Tipo de visto: ${tipoVisto}.`;
 
     const data = {
         nomecontato: formData.get('nomecontato'),
@@ -940,8 +1164,7 @@ function collectFormData(rawFormData) {
         dditelefonecontato: dditelefonecontato,
         telefonecontato: telefonecontato,
         mensagem: mensagem,
-        nivelingles: nivelIngles,
-        vencimentovisto: vencimentoVisto,
+        tipovisto: tipoVisto,
         form_started_at: Number(formData.get('form_started_at') || Date.now()),
         company_website: String(formData.get('company_website') || '')
     };
@@ -979,8 +1202,7 @@ function collectFormData(rawFormData) {
         emailcontato: maskForLog(data.emailcontato, 'email'),
         telefonecontato: maskForLog(data.telefonecontato, 'phone'),
         dditelefonecontato: data.dditelefonecontato,
-        nivelingles: data.nivelingles,
-        vencimentovisto: data.vencimentovisto,
+        tipovisto: data.tipovisto,
         idunidade: data.idunidade,
         idprograma: data.idprograma || null,
         idpais: data.idpais || null,
@@ -1119,8 +1341,7 @@ async function submitForm(event) {
                 emailcontato: maskForLog(formData.emailcontato, 'email'),
                 telefonecontato: maskForLog(formData.telefonecontato, 'phone'),
                 idunidade: formData.idunidade,
-                nivelingles: formData.nivelingles,
-                vencimentovisto: formData.vencimentovisto
+                tipovisto: formData.tipovisto
             }
         });
         const response = await fetchAPI(API_LEAD_ENDPOINT, {
@@ -1131,8 +1352,7 @@ async function submitForm(event) {
         formDebug('API response processed in submit', { response });
 
         if (response.sucesso) {
-            const successMsg = response.mensagem || 
-                tr('validation.successDefault');
+            const successMsg = tr('validation.successDefault');
             const captchaWarning = captchaBypassed || response.captcha_warning;
             const finalMsg = captchaWarning
                 ? `${successMsg} ${tr('validation.captchaNote')}`
@@ -1184,6 +1404,7 @@ document.addEventListener('DOMContentLoaded', () => {
         query: window.location.search,
         origin: window.location.origin,
         apiBaseUrl: API_BASE_URL,
+        reviewsEndpoint: REVIEWS_ENDPOINT,
         turnstileEnabled: Boolean(TURNSTILE_CONFIG.ENABLED),
         turnstileHasSiteKey: Boolean(TURNSTILE_CONFIG.SITE_KEY),
         securityEnabled: isSecurityEnabled()
@@ -1208,12 +1429,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const initialLocale = getInitialLocale();
     setLocale(initialLocale, false);
+    loadGoogleReviews();
 
     document.querySelectorAll('.language-flag-btn').forEach((btn) => {
         btn.addEventListener('click', (event) => {
             event.preventDefault();
             const selectedLocale = btn.dataset.locale || DEFAULT_LOCALE;
             setLocale(selectedLocale, true);
+            loadGoogleReviews();
         });
     });
 

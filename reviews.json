@@ -1,0 +1,64 @@
+{
+  "sucesso": true,
+  "nome": "CI Ireland",
+  "rating": 5,
+  "total": 7,
+  "reviews": [
+    {
+      "author": "Tiago Gontijo",
+      "text": "Gostaria de agradecer imenso a CI Intercambio, em especial a Thamiris e a Aliny, por todo o apoio na minha entrada na faculdade. Depois de concluir meus 3 anos de curso, o suporte delas foi essencial para que essa transicao fosse um sucesso. Profissionais dedicadas, atenciosas e que realmente acompanham o aluno ate o final.",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    },
+    {
+      "author": "Val",
+      "text": "Cara, eu, desde o inicio, tive muito apoio da equipe. Eles me ajudaram de todas as maneiras. Me acolheram e se mostraram muito humanos com a minha felicidade. Adorei e recomendo demais. Podem ir sem medo! Eles sao 10/10!",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    },
+    {
+      "author": "Franciane Brito",
+      "text": "Recomendo a CI intercambio irlanda com os olhos fechados. Tive um atendimento excelente da consultora Talita que me ajudou muito sobre a decisao da faculdade com muita atencao e simpatia, juntamente com o suporte da Amanda que foi excelente em me ajudar com os papeis para imigracao e adicionais para a faculdade com muita atencao e apoio. Valeu muito a pena ter fechado com eles!",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    },
+    {
+      "author": "Samara Mesquita",
+      "text": "Minha experiencia com a CI foi incrivel! Recebi a ajuda do Romario, que me auxiliou em todas as minhas renovacoes. Ele foi um profissional excepcional e sou muito grata por tudo que fez por mim. Recomendo a todos!",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    },
+    {
+      "author": "Cibele",
+      "text": "Excelente atendimento! Amanda Zangarini e Wagner foram extremamente profissionais, solucionando todas minhas duvidas e problemas com paciencia e respeito!",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    },
+    {
+      "author": "Andrea Estrada",
+      "text": "Excelente servico e apoio durante todo o meu processo universitario com o meu orientador Albert. Muito confiavel e atencioso.",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    },
+    {
+      "author": "Roberta Blanco",
+      "text": "Amanda e Gabriel foram extremamente gentis e prestativos durante toda a minha jornada para encontrar o curso certo e me forneceram tudo o que eu precisava para prosseguir. Estou muito satisfeita com o servico e recomendo fortemente.",
+      "rating": 5,
+      "profileUrl": "",
+      "publishedAt": "",
+      "relativeTime": ""
+    }
+  ]
+}

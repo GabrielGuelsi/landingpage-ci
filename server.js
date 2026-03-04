@@ -18,13 +18,14 @@ const TURNSTILE_SITE_KEY = process.env.TURNSTILE_SITE_KEY || '';
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '';
 const TURNSTILE_VERIFY_URL = process.env.TURNSTILE_VERIFY_URL || 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const TURNSTILE_FAIL_OPEN = process.env.TURNSTILE_FAIL_OPEN !== 'false';
+const REVIEWS_ENDPOINT = process.env.REVIEWS_ENDPOINT || '/reviews.json';
 
 const FORM_MIN_SUBMIT_TIME_MS = Number(process.env.FORM_MIN_SUBMIT_TIME_MS || 3000);
 const FORM_RATE_LIMIT_WINDOW_MS = Number(process.env.FORM_RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
 const FORM_RATE_LIMIT_MAX_ATTEMPTS = Number(process.env.FORM_RATE_LIMIT_MAX_ATTEMPTS || 5);
 
 const rateLimitStore = new Map();
-const STATIC_FILE_EXTENSIONS = new Set(['.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif', '.ico', '.mp4', '.webm', '.woff', '.woff2', '.ttf', '.txt']);
+const STATIC_FILE_EXTENSIONS = new Set(['.html', '.css', '.js', '.json', '.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif', '.ico', '.mp4', '.webm', '.woff', '.woff2', '.ttf', '.txt']);
 
 if (!SPREAD_API_TOKEN) {
   console.warn('[WARN] SPREAD_API_TOKEN não definido. Envio de formulário falhará.');
@@ -63,6 +64,7 @@ server.listen(PORT, () => {
 function handlePublicConfig(_req, res) {
   const publicConfig = {
     API_BASE_URL: '/api',
+    REVIEWS_ENDPOINT: REVIEWS_ENDPOINT,
     MESSAGES: {
       SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',
       ERROR: 'Erro ao enviar formulário. Por favor, tente novamente.',
@@ -270,8 +272,7 @@ function sanitizePayload(body) {
     dditelefonecontato: sanitizeString(body.dditelefonecontato, 5),
     telefonecontato: sanitizeString(body.telefonecontato, 30),
     mensagem: sanitizeString(body.mensagem, 400),
-    nivelingles: sanitizeString(body.nivelingles, 40),
-    vencimentovisto: sanitizeString(body.vencimentovisto, 30),
+    tipovisto: sanitizeString(body.tipovisto, 40),
     idunidade: sanitizeString(body.idunidade || '2', 10),
     recebeemail: body.recebeemail === 'S' ? 'S' : 'N',
     recebesms: body.recebesms === 'S' ? 'S' : 'N'
@@ -294,14 +295,12 @@ function validateBusinessPayload(body) {
   const nome = String(body.nomecontato || '').trim();
   const email = String(body.emailcontato || '').trim();
   const telefone = String(body.telefonecontato || '').trim();
-  const nivel = String(body.nivelingles || '').trim();
-  const vencimento = String(body.vencimentovisto || '').trim();
+  const tipoVisto = String(body.tipovisto || '').trim();
 
   if (!nome) errors.push('Nome completo é obrigatório');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('E-mail válido é obrigatório');
   if (!telefone || telefone.replace(/\D/g, '').length < 8) errors.push('Telefone deve incluir código do país e número completo');
-  if (!nivel) errors.push('Nível de Inglês é obrigatório');
-  if (!vencimento) errors.push('Data de vencimento do visto é obrigatória');
+  if (!tipoVisto) errors.push('Tipo de visto é obrigatório');
 
   return errors;
 }
@@ -421,6 +420,7 @@ function getContentType(ext) {
     case '.html': return 'text/html; charset=utf-8';
     case '.css': return 'text/css; charset=utf-8';
     case '.js': return 'application/javascript; charset=utf-8';
+    case '.json': return 'application/json; charset=utf-8';
     case '.png': return 'image/png';
     case '.jpg':
     case '.jpeg': return 'image/jpeg';
