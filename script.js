@@ -2,7 +2,6 @@
 // Use CONFIG do arquivo config.js se disponível, senão use valores padrão
 const API_BASE_URL = (typeof CONFIG !== 'undefined' && CONFIG.API_BASE_URL) || '/api';
 const API_LEAD_ENDPOINT = (typeof CONFIG !== 'undefined' && CONFIG.API_LEAD_ENDPOINT) || '/lead';
-const REVIEWS_ENDPOINT = (typeof CONFIG !== 'undefined' && CONFIG.REVIEWS_ENDPOINT) || '/api/reviews';
 const SECURITY_CONFIG = (typeof CONFIG !== 'undefined' && CONFIG.SECURITY) || {};
 const TURNSTILE_CONFIG = SECURITY_CONFIG.TURNSTILE || {};
 const TURNSTILE_FAIL_OPEN = TURNSTILE_CONFIG.FAIL_OPEN !== false;
@@ -20,6 +19,43 @@ const DEFAULT_LOCALE = 'pt';
 const LOCALE_STORAGE_KEY = 'ci_landing_locale';
 let currentLocale = DEFAULT_LOCALE;
 const FORM_DEBUG_ENABLED = true;
+const STATIC_REVIEWS = [
+    {
+        author: 'Tiago Gontijo',
+        text: 'Gostaria de agradecer imenso a CI Intercambio, em especial a Thamiris e a Aliny, por todo o apoio na minha entrada na faculdade. Depois de concluir meus 3 anos de curso, o suporte delas foi essencial para que essa transicao fosse um sucesso. Profissionais dedicadas, atenciosas e que realmente acompanham o aluno ate o final.',
+        rating: 5
+    },
+    {
+        author: 'Val',
+        text: 'Cara, eu, desde o inicio, tive muito apoio da equipe. Eles me ajudaram de todas as maneiras. Me acolheram e se mostraram muito humanos com a minha felicidade. Adorei e recomendo demais. Podem ir sem medo! Eles sao 10/10!',
+        rating: 5
+    },
+    {
+        author: 'Franciane Brito',
+        text: 'Recomendo a CI intercambio irlanda com os olhos fechados. Tive um atendimento excelente da consultora Talita que me ajudou muito sobre a decisao da faculdade com muita atencao e simpatia, juntamente com o suporte da Amanda que foi excelente em me ajudar com os papeis para imigracao e adicionais para a faculdade com muita atencao e apoio. Valeu muito a pena ter fechado com eles!',
+        rating: 5
+    },
+    {
+        author: 'Samara Mesquita',
+        text: 'Minha experiencia com a CI foi incrivel! Recebi a ajuda do Romario, que me auxiliou em todas as minhas renovacoes. Ele foi um profissional excepcional e sou muito grata por tudo que fez por mim. Recomendo a todos!',
+        rating: 5
+    },
+    {
+        author: 'Cibele',
+        text: 'Excelente atendimento! Amanda Zangarini e Wagner foram extremamente profissionais, solucionando todas minhas duvidas e problemas com paciencia e respeito!',
+        rating: 5
+    },
+    {
+        author: 'Andrea Estrada',
+        text: 'Excelente servico e apoio durante todo o meu processo universitario com o meu orientador Albert. Muito confiavel e atencioso.',
+        rating: 5
+    },
+    {
+        author: 'Roberta Blanco',
+        text: 'Amanda e Gabriel foram extremamente gentis e prestativos durante toda a minha jornada para encontrar o curso certo e me forneceram tudo o que eu precisava para prosseguir. Estou muito satisfeita com o servico e recomendo fortemente.',
+        rating: 5
+    }
+];
 
 function debugTimestamp() {
     return new Date().toISOString();
@@ -819,32 +855,15 @@ function initReviewsCarousel(cardsCount) {
     update();
 }
 
-async function loadGoogleReviews() {
+function loadGoogleReviews() {
     const track = document.getElementById('reviewsTrack');
     const summary = document.getElementById('reviewsSummary');
     if (!track || !summary) return;
 
-    formDebug('Reviews load started', { reviewsEndpoint: REVIEWS_ENDPOINT });
+    formDebug('Reviews load started', { source: 'embedded' });
 
     try {
-        const response = await fetch(REVIEWS_ENDPOINT, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-
-        const contentType = response.headers.get('content-type') || '';
-        if (!response.ok || !contentType.includes('application/json')) {
-            throw new Error('reviews-endpoint-invalid');
-        }
-
-        const payload = await response.json();
-        if (!payload || payload.sucesso !== true || !Array.isArray(payload.reviews)) {
-            throw new Error('reviews-payload-invalid');
-        }
-
-        const reviews = payload.reviews;
+        const reviews = STATIC_REVIEWS;
         if (reviews.length === 0) {
             throw new Error('reviews-empty');
         }
@@ -1404,7 +1423,6 @@ document.addEventListener('DOMContentLoaded', () => {
         query: window.location.search,
         origin: window.location.origin,
         apiBaseUrl: API_BASE_URL,
-        reviewsEndpoint: REVIEWS_ENDPOINT,
         turnstileEnabled: Boolean(TURNSTILE_CONFIG.ENABLED),
         turnstileHasSiteKey: Boolean(TURNSTILE_CONFIG.SITE_KEY),
         securityEnabled: isSecurityEnabled()

@@ -18,7 +18,6 @@ const TURNSTILE_SITE_KEY = process.env.TURNSTILE_SITE_KEY || '';
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '';
 const TURNSTILE_VERIFY_URL = process.env.TURNSTILE_VERIFY_URL || 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const TURNSTILE_FAIL_OPEN = process.env.TURNSTILE_FAIL_OPEN !== 'false';
-const REVIEWS_ENDPOINT = process.env.REVIEWS_ENDPOINT || '/reviews.json';
 
 const FORM_MIN_SUBMIT_TIME_MS = Number(process.env.FORM_MIN_SUBMIT_TIME_MS || 3000);
 const FORM_RATE_LIMIT_WINDOW_MS = Number(process.env.FORM_RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
@@ -64,7 +63,6 @@ server.listen(PORT, () => {
 function handlePublicConfig(_req, res) {
   const publicConfig = {
     API_BASE_URL: '/api',
-    REVIEWS_ENDPOINT: REVIEWS_ENDPOINT,
     MESSAGES: {
       SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',
       ERROR: 'Erro ao enviar formulário. Por favor, tente novamente.',
