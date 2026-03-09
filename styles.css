@@ -313,6 +313,11 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     letter-spacing: -0.01em;
+    text-align: left;
+}
+
+.hero-title-2 .hero-orange {
+    color: var(--primary-color);
 }
 
 .hero-title .highlight {

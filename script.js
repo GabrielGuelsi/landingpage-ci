@@ -103,7 +103,7 @@ const I18N = {
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Iniciar meu planejamento',
         heroTitle1: 'Escolher um curso superior na Irlanda não é sobre matrícula:',
-        heroTitle2: '<strong>É sobre o seu futuro!</strong>',
+        heroTitle2: 'É <span class="hero-orange">sobre o seu futuro!</span>',
         heroSubtitle: 'Há <strong>9 anos</strong>, orientamos mais de <strong>5.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade',
         heroBenefitsTitle: 'Decisões bem orientadas começam com entendimento profundo do seu perfil:',
         heroBenefits: [
@@ -223,7 +223,7 @@ const I18N = {
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Start my academic planning',
         heroTitle1: 'Choosing a higher education course in Ireland is not just about enrollment',
-        heroTitle2: '<strong>It is about your future</strong>',
+        heroTitle2: 'It is about <span class="hero-orange">your future</span>',
         heroSubtitle: 'For <strong>9 years</strong>, we have guided more than <strong>5,000 international students</strong> in strategic academic decisions aligned with visa, career, and employability goals',
         heroBenefitsTitle: 'Well-informed decisions start with a deep understanding of your profile:',
         heroBenefits: [
@@ -343,7 +343,7 @@ const I18N = {
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Iniciar mi planificación académica',
         heroTitle1: 'Elegir un curso superior en Irlanda no es solo una matrícula',
-        heroTitle2: '<strong>Se trata de tu futuro</strong>',
+        heroTitle2: 'Se trata de <span class="hero-orange">tu futuro</span>',
         heroSubtitle: 'Hace <strong>9 años</strong>, orientamos a más de <strong>5.000 estudiantes internacionales</strong> en decisiones académicas estratégicas, alineadas con visa, carrera y empleabilidad',
         heroBenefitsTitle: 'Las buenas decisiones comienzan con una comprensión profunda de tu perfil:',
         heroBenefits: [
