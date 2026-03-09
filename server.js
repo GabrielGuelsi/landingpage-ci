@@ -14,6 +14,15 @@ const IS_PROD = NODE_ENV === 'production';
 const PUBLIC_DIR = __dirname;
 const SPREAD_API_BASE_URL = (process.env.SPREAD_API_BASE_URL || 'https://gogreen.ci.com.br/api').replace(/\/$/, '');
 const SPREAD_API_TOKEN = process.env.SPREAD_API_TOKEN || '';
+const WHATSAPP_TEST_MODE = process.env.WHATSAPP_TEST_MODE === 'true';
+const WHATSAPP_API_VERSION = process.env.WHATSAPP_API_VERSION || 'v23.0';
+const WHATSAPP_ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN || '';
+const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
+const WHATSAPP_TEMPLATE_NAME = process.env.WHATSAPP_TEMPLATE_NAME || 'ci_ireland_lead_autoreply';
+const WHATSAPP_TEMPLATE_USES_NAME_PARAM = process.env.WHATSAPP_TEMPLATE_USES_NAME_PARAM !== 'false';
+const WHATSAPP_TEMPLATE_LANG_PT = process.env.WHATSAPP_TEMPLATE_LANG_PT || 'pt_BR';
+const WHATSAPP_TEMPLATE_LANG_EN = process.env.WHATSAPP_TEMPLATE_LANG_EN || 'en';
+const WHATSAPP_TEMPLATE_LANG_ES = process.env.WHATSAPP_TEMPLATE_LANG_ES || 'es';
 const TURNSTILE_SITE_KEY = process.env.TURNSTILE_SITE_KEY || '';
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '';
 const TURNSTILE_VERIFY_URL = process.env.TURNSTILE_VERIFY_URL || 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -28,6 +37,9 @@ const STATIC_FILE_EXTENSIONS = new Set(['.html', '.css', '.js', '.json', '.png',
 
 if (!SPREAD_API_TOKEN) {
   console.warn('[WARN] SPREAD_API_TOKEN não definido. Envio de formulário falhará.');
+}
+if (!WHATSAPP_ACCESS_TOKEN || !WHATSAPP_PHONE_NUMBER_ID) {
+  console.warn('[WARN] WhatsApp Cloud API não configurada. Auto-mensagem ficará desativada.');
 }
 if (!TURNSTILE_SECRET_KEY) {
   console.warn('[WARN] TURNSTILE_SECRET_KEY não definido. Validação Turnstile será rejeitada.');
@@ -173,6 +185,32 @@ async function handleLeadSubmit(req, res) {
 
   const payload = sanitizePayload(body);
 
+  if (WHATSAPP_TEST_MODE) {
+    console.warn('[WHATSAPP TEST MODE] Ativo: API de lead externa sera ignorada neste envio.');
+    const whatsappResult = await sendLeadWhatsAppConfirmation(body);
+
+    if (!whatsappResult.ok) {
+      console.warn('[WHATSAPP TEST MODE] Falha no envio da mensagem:', whatsappResult);
+      return sendJson(res, 502, {
+        sucesso: false,
+        mensagem: 'Modo teste WhatsApp: falha no envio da mensagem.',
+        detalhes: whatsappResult.reason || 'erro-desconhecido'
+      });
+    }
+
+    clearAttempts(ip);
+    return sendJson(res, 200, {
+      sucesso: true,
+      mensagem: 'Modo teste WhatsApp: mensagem enviada com sucesso.',
+      whatsapp: {
+        test_mode: true,
+        locale: whatsappResult.locale,
+        template_language: whatsappResult.templateLanguageCode,
+        message_id: whatsappResult.messageId || null
+      }
+    });
+  }
+
   try {
     const upstreamResponse = await fetch(`${SPREAD_API_BASE_URL}/comum/formulario/`, {
       method: 'POST',
@@ -197,6 +235,18 @@ async function handleLeadSubmit(req, res) {
     const finalResponse = (responseData && typeof responseData === 'object')
       ? { ...responseData }
       : { sucesso: true, mensagem: 'Formulário enviado com sucesso!' };
+
+    const whatsappResult = await sendLeadWhatsAppConfirmation(body);
+    if (!whatsappResult.ok) {
+      console.warn('[WHATSAPP] Mensagem não enviada:', whatsappResult);
+    } else {
+      console.info('[WHATSAPP] Mensagem enviada com sucesso:', {
+        phone: whatsappResult.phone,
+        locale: whatsappResult.locale,
+        templateLanguageCode: whatsappResult.templateLanguageCode,
+        messageId: whatsappResult.messageId
+      });
+    }
 
     if (captchaBypassed) {
       finalResponse.captcha_warning = true;
@@ -285,6 +335,149 @@ function sanitizePayload(body) {
   if (body.gclid) payload.gclid = sanitizeString(body.gclid, 150);
 
   return payload;
+}
+
+async function sendLeadWhatsAppConfirmation(body) {
+  if (!WHATSAPP_ACCESS_TOKEN || !WHATSAPP_PHONE_NUMBER_ID) {
+    return { ok: false, reason: 'whatsapp-config-missing' };
+  }
+
+  const locale = normalizeLocaleCode(body && body.site_locale);
+  const templateLanguageCode = getWhatsAppTemplateLanguageCode(locale);
+  const name = getFirstName(body && body.nomecontato);
+  const phone = normalizePhoneToE164(body && body.dditelefonecontato, body && body.telefonecontato);
+
+  if (!phone) {
+    return {
+      ok: false,
+      reason: 'invalid-phone',
+      locale,
+      rawDdi: sanitizeString(body && body.dditelefonecontato, 16),
+      rawPhone: sanitizeString(body && body.telefonecontato, 40)
+    };
+  }
+
+  const endpoint = `https://graph.facebook.com/${WHATSAPP_API_VERSION}/${WHATSAPP_PHONE_NUMBER_ID}/messages`;
+  const requestBody = {
+    messaging_product: 'whatsapp',
+    to: phone,
+    type: 'template',
+    template: {
+      name: WHATSAPP_TEMPLATE_NAME,
+      language: {
+        code: templateLanguageCode
+      }
+    }
+  };
+
+  if (WHATSAPP_TEMPLATE_USES_NAME_PARAM) {
+    requestBody.template.components = [
+      {
+        type: 'body',
+        parameters: [
+          { type: 'text', text: name }
+        ]
+      }
+    ];
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    console.info('[WHATSAPP] Tentando envio de template:', {
+      endpoint,
+      locale,
+      templateName: WHATSAPP_TEMPLATE_NAME,
+      templateLanguageCode,
+      phone
+    });
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal
+    });
+
+    const responseData = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        reason: 'meta-api-error',
+        status: response.status,
+        locale,
+        templateLanguageCode,
+        phone,
+        responseData
+      };
+    }
+
+    const messageId = Array.isArray(responseData && responseData.messages) && responseData.messages[0]
+      ? responseData.messages[0].id
+      : null;
+
+    return {
+      ok: true,
+      locale,
+      templateLanguageCode,
+      phone,
+      messageId
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      reason: error && error.name === 'AbortError' ? 'meta-timeout' : 'meta-request-failed',
+      locale,
+      templateLanguageCode,
+      phone,
+      error: error ? error.message : 'unknown'
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function normalizeLocaleCode(locale) {
+  const value = String(locale || '').toLowerCase().trim();
+  if (value === 'pt' || value === 'en' || value === 'es') return value;
+  return 'pt';
+}
+
+function getWhatsAppTemplateLanguageCode(locale) {
+  if (locale === 'en') return WHATSAPP_TEMPLATE_LANG_EN;
+  if (locale === 'es') return WHATSAPP_TEMPLATE_LANG_ES;
+  return WHATSAPP_TEMPLATE_LANG_PT;
+}
+
+function getFirstName(fullName) {
+  const clean = sanitizeString(fullName, 120);
+  if (!clean) return 'aluno(a)';
+  const parts = clean.split(/\s+/).filter(Boolean);
+  return sanitizeString(parts[0] || clean, 40);
+}
+
+function normalizePhoneToE164(ddiValue, phoneValue) {
+  const ddi = String(ddiValue || '').trim();
+  const phone = String(phoneValue || '').trim();
+
+  if (!ddi && !phone) return null;
+
+  if (phone.startsWith('+')) {
+    const digits = phone.replace(/\D/g, '');
+    return digits ? `+${digits}` : null;
+  }
+
+  const ddiDigits = ddi.replace(/\D/g, '');
+  const phoneDigits = phone.replace(/\D/g, '');
+  if (!phoneDigits) return null;
+  if (!ddiDigits) return null;
+
+  return `+${ddiDigits}${phoneDigits}`;
 }
 
 function validateBusinessPayload(body) {

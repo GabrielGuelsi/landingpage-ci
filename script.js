@@ -1182,6 +1182,7 @@ function collectFormData(rawFormData) {
         emailcontato: formData.get('emailcontato'),
         dditelefonecontato: dditelefonecontato,
         telefonecontato: telefonecontato,
+        site_locale: currentLocale,
         mensagem: mensagem,
         tipovisto: tipoVisto,
         form_started_at: Number(formData.get('form_started_at') || Date.now()),
