@@ -748,6 +748,13 @@ function renderReviewStars(rating) {
     return `${full}${empty}`;
 }
 
+// Consultant shown on review cards – swap photo/name when available
+const REVIEW_CONSULTANT = {
+    name: 'Equipe CI Irlanda',
+    role: 'Consultora Acadêmica',
+    photo: null // set to e.g. 'images/consultant-photo.jpg' when available
+};
+
 function createReviewCard(review) {
     const card = document.createElement('article');
     card.className = 'review-card';
@@ -784,6 +791,48 @@ function createReviewCard(review) {
         link.textContent = tr('reviews.seeOriginal');
         card.appendChild(link);
     }
+
+    // Consultant info with verified badge
+    const consultant = document.createElement('div');
+    consultant.className = 'review-consultant';
+
+    const avatarWrap = document.createElement('div');
+    avatarWrap.className = 'consultant-avatar';
+
+    if (REVIEW_CONSULTANT.photo) {
+        const img = document.createElement('img');
+        img.src = REVIEW_CONSULTANT.photo;
+        img.alt = REVIEW_CONSULTANT.name;
+        img.className = 'consultant-photo';
+        avatarWrap.appendChild(img);
+    } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'consultant-photo-placeholder';
+        placeholder.textContent = '👩‍💼';
+        avatarWrap.appendChild(placeholder);
+    }
+
+    const badge = document.createElement('span');
+    badge.className = 'verified-badge';
+    badge.textContent = '✓';
+    avatarWrap.appendChild(badge);
+
+    const info = document.createElement('div');
+    info.className = 'consultant-info';
+
+    const name = document.createElement('span');
+    name.className = 'consultant-name';
+    name.textContent = REVIEW_CONSULTANT.name;
+
+    const role = document.createElement('span');
+    role.className = 'consultant-role';
+    role.textContent = REVIEW_CONSULTANT.role;
+
+    info.appendChild(name);
+    info.appendChild(role);
+    consultant.appendChild(avatarWrap);
+    consultant.appendChild(info);
+    card.appendChild(consultant);
 
     return card;
 }
