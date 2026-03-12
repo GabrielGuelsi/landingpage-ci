@@ -2,8 +2,8 @@
 // Em produção, este arquivo pode ser sobrescrito pelo backend em /config.js
 
 const CONFIG = {
-    API_BASE_URL: '',
-    API_LEAD_ENDPOINT: '/api/lead',
+    API_BASE_URL: '/api',
+    API_LEAD_ENDPOINT: '/lead',
 
     MESSAGES: {
         SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',
