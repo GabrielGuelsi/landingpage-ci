@@ -220,7 +220,7 @@ body {
     min-height: 100svh;
     overflow: hidden;
     color: var(--white);
-    padding: 90px 0 70px;
+    padding: 90px 0 40px;
     display: flex;
     align-items: center;
     background: var(--purple-bg);
@@ -378,7 +378,7 @@ body {
     text-decoration: none !important;
     border: none;
     transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-    margin-top: 1.75rem;
+    margin-top: 0.75rem;
     cursor: pointer;
     animation: fadeInUp 0.8s ease-out 0.4s both;
     white-space: nowrap;
@@ -410,7 +410,7 @@ body {
     font-size: 0.9rem;
     color: var(--white);
     opacity: 0.95;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.1rem;
 }
 
 .hero-benefit-card {
@@ -1606,7 +1606,7 @@ body {
 
     .hero-with-form {
         min-height: 100vh;
-        padding: 100px 0 60px;
+        padding: 100px 0 40px;
         align-items: center;
     }
 

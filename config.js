@@ -4,6 +4,7 @@
 const CONFIG = {
     API_BASE_URL: '/api',
     API_LEAD_ENDPOINT: '/comum/formulario/',
+    API_TOKEN: 'wOSfJm5NP5h6xqU78PB5u6M12o450D43k43knvN2',
 
     MESSAGES: {
         SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',

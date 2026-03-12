@@ -130,7 +130,7 @@ const I18N = {
             }
         ],
         form: {
-            title: 'Iniciar meu planejamento acadêmico',
+            title: 'Quero iniciar meu planejamento acadêmico',
             labels: {
                 name: 'Nome Completo *',
                 email: 'E-mail *',
@@ -145,8 +145,8 @@ const I18N = {
             visaTypeOptions: ['Selecione o visto', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Solicitar Contato',
             sending: 'Enviando...',
-            kicker: 'Consulta Gratuita',
-            sub: 'Fale mais sobre você e um de nossos consultores entrará em contato.',
+            kicker: 'Consultoria Gratuita',
+            sub: 'Deixe suas informações e um de nossos consultores entrará em contato.',
             trust: ['✓ Gratuita', '✓ Individual']
         },
         benefitsSection: {
