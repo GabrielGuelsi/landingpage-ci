@@ -18,42 +18,43 @@ const SUPPORTED_LOCALES = ['pt', 'en', 'es'];
 const DEFAULT_LOCALE = 'pt';
 const LOCALE_STORAGE_KEY = 'ci_landing_locale';
 let currentLocale = DEFAULT_LOCALE;
-const FORM_DEBUG_ENABLED = true;
+const FORM_DEBUG_ENABLED = false;
 const STATIC_REVIEWS = [
     {
         author: 'Tiago Gontijo',
         text: 'Gostaria de agradecer imenso a CI Intercambio, em especial a Thamiris e a Aliny, por todo o apoio na minha entrada na faculdade. Depois de concluir meus 3 anos de curso, o suporte delas foi essencial para que essa transicao fosse um sucesso. Profissionais dedicadas, atenciosas e que realmente acompanham o aluno ate o final.',
-        rating: 5
-    },
-    {
-        author: 'Val',
-        text: 'Cara, eu, desde o inicio, tive muito apoio da equipe. Eles me ajudaram de todas as maneiras. Me acolheram e se mostraram muito humanos com a minha felicidade. Adorei e recomendo demais. Podem ir sem medo! Eles sao 10/10!',
-        rating: 5
+        rating: 5,
+        consultant: { name: 'Aliny', role: 'Consultora Acadêmica', photo: 'images/consultants/aliny.jpg' }
     },
     {
         author: 'Franciane Brito',
         text: 'Recomendo a CI intercambio irlanda com os olhos fechados. Tive um atendimento excelente da consultora Talita que me ajudou muito sobre a decisao da faculdade com muita atencao e simpatia, juntamente com o suporte da Amanda que foi excelente em me ajudar com os papeis para imigracao e adicionais para a faculdade com muita atencao e apoio. Valeu muito a pena ter fechado com eles!',
-        rating: 5
+        rating: 5,
+        consultant: { name: 'Talita', role: 'Consultora Acadêmica', photo: 'images/consultants/talita.jpg' }
     },
     {
         author: 'Samara Mesquita',
         text: 'Minha experiencia com a CI foi incrivel! Recebi a ajuda do Romario, que me auxiliou em todas as minhas renovacoes. Ele foi um profissional excepcional e sou muito grata por tudo que fez por mim. Recomendo a todos!',
-        rating: 5
+        rating: 5,
+        consultant: { name: 'Romário', role: 'Consultor Acadêmico', photo: 'images/consultants/romario.jpg' }
     },
     {
         author: 'Cibele',
         text: 'Excelente atendimento! Amanda Zangarini e Wagner foram extremamente profissionais, solucionando todas minhas duvidas e problemas com paciencia e respeito!',
-        rating: 5
+        rating: 5,
+        consultant: { name: 'Wagner', role: 'Consultor Acadêmico', photo: 'images/consultants/wagner.jpg' }
     },
     {
         author: 'Andrea Estrada',
         text: 'Excelente servico e apoio durante todo o meu processo universitario com o meu orientador Albert. Muito confiavel e atencioso.',
-        rating: 5
+        rating: 5,
+        consultant: { name: 'Albert', role: 'Consultor Acadêmico', photo: 'images/consultants/albert.jpg' }
     },
     {
         author: 'Roberta Blanco',
         text: 'Amanda e Gabriel foram extremamente gentis e prestativos durante toda a minha jornada para encontrar o curso certo e me forneceram tudo o que eu precisava para prosseguir. Estou muito satisfeita com o servico e recomendo fortemente.',
-        rating: 5
+        rating: 5,
+        consultant: { name: 'Gabriel', role: 'Consultor Acadêmico', photo: 'images/consultants/gabriel.jpg' }
     }
 ];
 
@@ -103,7 +104,7 @@ const I18N = {
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Iniciar meu planejamento',
         heroTitle1: 'Escolher um curso superior na Irlanda não é sobre matrícula:',
-        heroTitle2: '<strong>É sobre o seu futuro!</strong>',
+        heroTitle2: '<strong><span class="hero-orange">É sobre o seu futuro!</span></strong>',
         heroSubtitle: 'Há <strong>9 anos</strong>, orientamos mais de <strong>5.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade',
         heroBenefitsTitle: 'Decisões bem orientadas começam com entendimento profundo do seu perfil:',
         heroBenefits: [
@@ -143,7 +144,10 @@ const I18N = {
             },
             visaTypeOptions: ['Selecione o visto', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Solicitar Contato',
-            sending: 'Enviando...'
+            sending: 'Enviando...',
+            kicker: 'Consulta Gratuita',
+            sub: 'Fale mais sobre você e um de nossos consultores entrará em contato.',
+            trust: ['✓ Gratuita', '✓ Individual']
         },
         benefitsSection: {
             title: 'Por que escolher a CI Irlanda?',
@@ -163,7 +167,7 @@ const I18N = {
             ]
         },
         finalCta: {
-            title: 'Orientação estratégica começa com o primeiro passo.',
+            title: 'Orientação estratégica começa com o <span class="caveat-highlight">primeiro passo</span>.',
             subtitle: 'Compartilhe os seus objetivos. Nossa equipe analisará seu caso para estruturar sua próxima decisão acadêmica na Irlanda.',
             button: 'Solicitar minha análise personalizada'
         },
@@ -223,7 +227,7 @@ const I18N = {
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Start my academic planning',
         heroTitle1: 'Choosing a higher education course in Ireland is not just about enrollment',
-        heroTitle2: '<strong>It is about your future</strong>',
+        heroTitle2: '<strong><span class="hero-orange">It is about your future</span></strong>',
         heroSubtitle: 'For <strong>9 years</strong>, we have guided more than <strong>5,000 international students</strong> in strategic academic decisions aligned with visa, career, and employability goals',
         heroBenefitsTitle: 'Well-informed decisions start with a deep understanding of your profile:',
         heroBenefits: [
@@ -263,7 +267,10 @@ const I18N = {
             },
             visaTypeOptions: ['Select visa type', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Request Contact',
-            sending: 'Sending...'
+            sending: 'Sending...',
+            kicker: 'Free Consultation',
+            sub: 'Fill in your details and one of our advisors will get in touch.',
+            trust: ['✓ Free', '✓ One-to-one']
         },
         benefitsSection: {
             title: 'Why choose CI Ireland?',
@@ -283,7 +290,7 @@ const I18N = {
             ]
         },
         finalCta: {
-            title: 'Strategic guidance starts with the first step.',
+            title: 'Strategic guidance starts with the <span class="caveat-highlight">first step</span>.',
             subtitle: 'Share your goals. Our team will analyze your case and structure your next academic decision in Ireland.',
             button: 'Request my personalized analysis'
         },
@@ -306,7 +313,8 @@ const I18N = {
             fromGoogle: 'Google Reviews',
             seeOriginal: 'See review on Google',
             reviewDatePrefix: 'Published',
-            filteredBy: 'Showing only 4 and 5-star reviews'
+            filteredBy: 'Showing only 4 and 5-star reviews',
+            consultantRole: 'Academic Advisor'
         },
         footer: {
             contactTitle: 'Contact',
@@ -343,7 +351,7 @@ const I18N = {
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
         headerButton: 'Iniciar mi planificación académica',
         heroTitle1: 'Elegir un curso superior en Irlanda no es solo una matrícula',
-        heroTitle2: '<strong>Se trata de tu futuro</strong>',
+        heroTitle2: '<strong><span class="hero-orange">Se trata de tu futuro</span></strong>',
         heroSubtitle: 'Hace <strong>9 años</strong>, orientamos a más de <strong>5.000 estudiantes internacionales</strong> en decisiones académicas estratégicas, alineadas con visa, carrera y empleabilidad',
         heroBenefitsTitle: 'Las buenas decisiones comienzan con una comprensión profunda de tu perfil:',
         heroBenefits: [
@@ -383,7 +391,10 @@ const I18N = {
             },
             visaTypeOptions: ['Selecciona la visa', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
             submit: 'Solicitar contacto',
-            sending: 'Enviando...'
+            sending: 'Enviando...',
+            kicker: 'Consulta Gratuita',
+            sub: 'Completa tus datos y uno de nuestros asesores se pondrá en contacto.',
+            trust: ['✓ Gratuita', '✓ Individual']
         },
         benefitsSection: {
             title: '¿Por qué elegir CI Irlanda?',
@@ -403,7 +414,7 @@ const I18N = {
             ]
         },
         finalCta: {
-            title: 'La orientación estratégica empieza con el primer paso.',
+            title: 'La orientación estratégica empieza con el <span class="caveat-highlight">primer paso</span>.',
             subtitle: 'Comparte tus objetivos. Nuestro equipo analizará tu caso para estructurar tu próxima decisión académica en Irlanda.',
             button: 'Solicitar mi análisis personalizado'
         },
@@ -426,7 +437,8 @@ const I18N = {
             fromGoogle: 'Reseñas en Google',
             seeOriginal: 'Ver reseña en Google',
             reviewDatePrefix: 'Publicado',
-            filteredBy: 'Mostrando solo reseñas de 4 y 5 estrellas'
+            filteredBy: 'Mostrando solo reseñas de 4 y 5 estrellas',
+            consultantRole: 'Asesor Académico'
         },
         footer: {
             contactTitle: 'Contacto',
@@ -504,6 +516,7 @@ function applyLocalizedContent(locale) {
     });
 
     setText('.header-button', tr('headerButton'));
+    setText('.hero-cta-btn', tr('headerButton'));
     setText('.hero-title', tr('heroTitle1'));
     setHtml('.hero-title-2', tr('heroTitle2'));
     setHtml('.hero-subtitle', tr('heroSubtitle'));
@@ -521,6 +534,13 @@ function applyLocalizedContent(locale) {
     });
 
     setText('.form-header h2', tr('form.title'));
+    setText('.modal-kicker', tr('form.kicker'));
+    setText('.modal-sub', tr('form.sub'));
+    const trustSpans = document.querySelectorAll('.modal-trust span');
+    const trustLabels = I18N[currentLocale].form.trust;
+    if (trustSpans && trustLabels) {
+        trustSpans.forEach((span, i) => { if (trustLabels[i]) span.textContent = trustLabels[i]; });
+    }
     setText('label[for="nomecontato"]', tr('form.labels.name'));
     setText('label[for="emailcontato"]', tr('form.labels.email'));
     setText('label[for="telefonecontato"]', tr('form.labels.phone'));
@@ -560,12 +580,12 @@ function applyLocalizedContent(locale) {
         if (descNode) descNode.textContent = cardContent[1];
     });
 
-    setText('.final-cta-title', tr('finalCta.title'));
+    setHtml('.final-cta-title', tr('finalCta.title'));
     setText('.final-cta-subtitle', tr('finalCta.subtitle'));
     setText('.final-cta-button', tr('finalCta.button'));
 
-    setText('.reviews-header .section-title', tr('reviews.title'));
-    setText('.reviews-subtitle', tr('reviews.subtitle'));
+    setText('#reviewsSectionTitle', tr('reviews.title'));
+    setText('#reviewsSectionSubtitle', tr('reviews.subtitle'));
     const reviewsCarousel = document.querySelector('[data-reviews-carousel]');
     if (reviewsCarousel) {
         const prevReviewBtn = reviewsCarousel.querySelector('.reviews-carousel-btn.prev');
@@ -748,11 +768,11 @@ function renderReviewStars(rating) {
     return `${full}${empty}`;
 }
 
-// Consultant shown on review cards – swap photo/name when available
+// Consultant shown on review cards – fallback when review has no consultant defined
 const REVIEW_CONSULTANT = {
     name: 'Equipe CI Irlanda',
     role: 'Consultora Acadêmica',
-    photo: null // set to e.g. 'images/consultant-photo.jpg' when available
+    photo: null
 };
 
 function createReviewCard(review) {
@@ -793,16 +813,18 @@ function createReviewCard(review) {
     }
 
     // Consultant info with verified badge
+    const consultantData = review.consultant || REVIEW_CONSULTANT;
+
     const consultant = document.createElement('div');
     consultant.className = 'review-consultant';
 
     const avatarWrap = document.createElement('div');
     avatarWrap.className = 'consultant-avatar';
 
-    if (REVIEW_CONSULTANT.photo) {
+    if (consultantData.photo) {
         const img = document.createElement('img');
-        img.src = REVIEW_CONSULTANT.photo;
-        img.alt = REVIEW_CONSULTANT.name;
+        img.src = consultantData.photo;
+        img.alt = consultantData.name;
         img.className = 'consultant-photo';
         avatarWrap.appendChild(img);
     } else {
@@ -822,11 +844,11 @@ function createReviewCard(review) {
 
     const name = document.createElement('span');
     name.className = 'consultant-name';
-    name.textContent = REVIEW_CONSULTANT.name;
+    name.textContent = consultantData.name;
 
     const role = document.createElement('span');
     role.className = 'consultant-role';
-    role.textContent = REVIEW_CONSULTANT.role;
+    role.textContent = tr('reviews.consultantRole') || consultantData.role;
 
     info.appendChild(name);
     info.appendChild(role);
@@ -856,7 +878,7 @@ function initReviewsCarousel(cardsCount) {
     const totalPages = () => Math.max(1, Math.ceil(cardsCount / getCardsPerPage()));
 
     const renderDots = () => {
-        dotsContainer.innerHTML = '';
+        dotsContainer.replaceChildren();
         const pages = totalPages();
         for (let i = 0; i < pages; i += 1) {
             const dot = document.createElement('button');
@@ -881,8 +903,11 @@ function initReviewsCarousel(cardsCount) {
         const cardsPerPage = getCardsPerPage();
         const pages = totalPages();
         if (currentPage >= pages) currentPage = pages - 1;
-        const translate = currentPage * (100 / cardsPerPage);
-        track.style.transform = `translateX(-${translate}%)`;
+        const firstCard = track.firstElementChild;
+        const cardWidth = firstCard ? firstCard.offsetWidth : track.parentElement.offsetWidth;
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        const translate = currentPage * cardsPerPage * (cardWidth + gap);
+        track.style.transform = `translateX(-${translate}px)`;
         updateButtons();
         renderDots();
     };
@@ -918,7 +943,7 @@ function loadGoogleReviews() {
         }
 
         summary.textContent = '';
-        track.innerHTML = '';
+        track.replaceChildren();
         reviews.forEach((review) => {
             track.appendChild(createReviewCard(review));
         });
@@ -926,14 +951,21 @@ function loadGoogleReviews() {
         formDebug('Reviews loaded successfully', { count: reviews.length });
     } catch (error) {
         formWarn('Reviews load failed', { message: error.message });
-        track.innerHTML = '';
+        track.replaceChildren();
         const fallback = document.createElement('article');
         fallback.className = 'review-card';
-        fallback.innerHTML = `
-            <div class="review-stars">★★★★☆</div>
-            <p class="review-text">${tr('reviews.error')}</p>
-            <p class="review-author">${tr('reviews.source')}</p>
-        `;
+        const stars = document.createElement('div');
+        stars.className = 'review-stars';
+        stars.textContent = '★★★★☆';
+        const reviewText = document.createElement('p');
+        reviewText.className = 'review-text';
+        reviewText.textContent = tr('reviews.error');
+        const reviewAuthor = document.createElement('p');
+        reviewAuthor.className = 'review-author';
+        reviewAuthor.textContent = tr('reviews.source');
+        fallback.appendChild(stars);
+        fallback.appendChild(reviewText);
+        fallback.appendChild(reviewAuthor);
         track.appendChild(fallback);
         summary.textContent = '';
         const carousel = document.querySelector('[data-reviews-carousel]');
@@ -1303,7 +1335,12 @@ async function submitForm(event) {
         submitBtn.disabled = false;
         if (btnText) btnText.style.display = 'inline';
         if (btnLoader) btnLoader.style.display = 'none';
-        if (!btnLoader) submitBtn.innerHTML = `<span class="btn-text">${tr('form.submit')}</span>`;
+        if (!btnLoader) {
+            const span = document.createElement('span');
+            span.className = 'btn-text';
+            span.textContent = tr('form.submit');
+            submitBtn.replaceChildren(span);
+        }
     };
 
     const rawFormData = getRawFormData();
@@ -1585,6 +1622,12 @@ document.addEventListener('DOMContentLoaded', () => {
     closeFormTriggers.forEach((trigger) => {
         trigger.addEventListener('click', closeFormModal);
     });
+
+    if (formModal) {
+        formModal.addEventListener('click', (e) => {
+            if (e.target === formModal) closeFormModal();
+        });
+    }
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && formModal && formModal.classList.contains('is-open')) {
