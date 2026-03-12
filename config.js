@@ -2,8 +2,8 @@
 // Em produção, este arquivo pode ser sobrescrito pelo backend em /config.js
 
 const CONFIG = {
-    API_BASE_URL: 'https://gogreen.ci.com.br/api',
-    API_LEAD_ENDPOINT: '/comum/formulario/',
+    API_BASE_URL: '',
+    API_LEAD_ENDPOINT: '/api/lead',
 
     MESSAGES: {
         SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',

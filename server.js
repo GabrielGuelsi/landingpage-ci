@@ -63,6 +63,7 @@ server.listen(PORT, () => {
 function handlePublicConfig(_req, res) {
   const publicConfig = {
     API_BASE_URL: '/api',
+    API_LEAD_ENDPOINT: '/lead',
     MESSAGES: {
       SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',
       ERROR: 'Erro ao enviar formulário. Por favor, tente novamente.',
