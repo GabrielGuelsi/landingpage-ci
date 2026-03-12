@@ -3,7 +3,7 @@
 
 const CONFIG = {
     API_BASE_URL: '/api',
-    API_LEAD_ENDPOINT: '/lead',
+    API_LEAD_ENDPOINT: '/comum/formulario/',
 
     MESSAGES: {
         SUCCESS: 'Formulário enviado com sucesso! Nossos consultores entrarão em contato em breve.',
@@ -24,8 +24,8 @@ const CONFIG = {
         RATE_LIMIT_MAX_ATTEMPTS: 3,
         RATE_LIMIT_STORAGE_KEY: 'ci_form_rate_limit_v1',
         TURNSTILE: {
-            ENABLED: false,
-            SITE_KEY: '',
+            ENABLED: true,
+            SITE_KEY: '0x4AAAAAAClCi2YvV3ICDY_k',
             ACTION: 'lead_form',
             FALLBACK_TO_VISIBLE_CHALLENGE: true,
             FAIL_OPEN: true
