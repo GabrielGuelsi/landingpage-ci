@@ -1463,6 +1463,29 @@ async function submitForm(event) {
                 ? `${successMsg} ${tr('validation.captchaNote')}`
                 : successMsg;
             showMessage(finalMsg, 'success');
+
+            // Analytics: GTM dataLayer + Meta Pixel Lead event
+            const capiEventId = response.capi_event_id || null;
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'generate_lead',
+                form_name: 'ci_lead_form',
+                lead_type: formData.tipovisto || '',
+                enhanced_conversion_data: {
+                    email: formData.emailcontato || '',
+                    phone_number: (formData.dditelefonecontato || '') + (formData.telefonecontato || ''),
+                    first_name: (formData.nomecontato || '').split(' ')[0],
+                    last_name: (formData.nomecontato || '').split(' ').slice(1).join(' ')
+                },
+                event_id: capiEventId
+            });
+            if (typeof fbq === 'function') {
+                fbq('track', 'Lead', {
+                    content_name: 'CI Irlanda Lead Form',
+                    content_category: formData.tipovisto || ''
+                }, capiEventId ? { eventID: capiEventId } : {});
+            }
+
             formDebug('Submit finished with success', {
                 sucesso: true,
                 captchaBypassed,
@@ -1603,6 +1626,12 @@ document.addEventListener('DOMContentLoaded', () => {
         formModal.classList.add('is-open');
         formModal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'form_modal_open',
+            form_name: 'ci_lead_form',
+            page_location: window.location.href
+        });
     };
 
     const closeFormModal = () => {

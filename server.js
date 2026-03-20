@@ -3,6 +3,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { URL } = require('url');
 
 loadEnv(path.join(__dirname, '.env'));
@@ -18,6 +19,10 @@ const TURNSTILE_SITE_KEY = process.env.TURNSTILE_SITE_KEY || '';
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '';
 const TURNSTILE_VERIFY_URL = process.env.TURNSTILE_VERIFY_URL || 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const TURNSTILE_FAIL_OPEN = process.env.TURNSTILE_FAIL_OPEN !== 'false';
+
+const GTM_ID          = process.env.GTM_ID          || 'GTM-WVSTCSVV';
+const META_PIXEL_ID   = process.env.META_PIXEL_ID   || '000000000000000';
+const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN || '';
 
 const FORM_MIN_SUBMIT_TIME_MS = Number(process.env.FORM_MIN_SUBMIT_TIME_MS || 3000);
 const FORM_RATE_LIMIT_WINDOW_MS = Number(process.env.FORM_RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
@@ -87,7 +92,8 @@ function handlePublicConfig(_req, res) {
         FALLBACK_TO_VISIBLE_CHALLENGE: true,
         FAIL_OPEN: TURNSTILE_FAIL_OPEN
       }
-    }
+    },
+    ANALYTICS: { GTM_ID, META_PIXEL_ID }
   };
 
   const body = `const CONFIG = ${JSON.stringify(publicConfig, null, 2)};\nif (typeof window !== 'undefined') { window.CONFIG = CONFIG; }\n`;
@@ -204,6 +210,11 @@ async function handleLeadSubmit(req, res) {
     }
 
     clearAttempts(ip);
+
+    const capiEventId = crypto.randomUUID();
+    finalResponse.capi_event_id = capiEventId;
+    fireMetaCapi(body, ip, req.headers['user-agent'] || '', capiEventId); // fire-and-forget
+
     return sendJson(res, 200, finalResponse);
   } catch (error) {
     console.error('[ERROR] Falha ao chamar API externa:', error);
@@ -241,12 +252,12 @@ function handleStatic(req, res, requestUrl) {
       headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload';
       headers['Content-Security-Policy'] = [
         "default-src 'self'",
-        "script-src 'self' https://challenges.cloudflare.com https://fonts.googleapis.com",
+        "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://fonts.googleapis.com https://www.googletagmanager.com https://connect.facebook.net",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com",
-        "frame-src https://www.google.com https://maps.google.com",
-        "connect-src 'self' https://challenges.cloudflare.com https://fonts.googleapis.com",
+        "frame-src https://www.google.com https://maps.google.com https://td.doubleclick.net https://www.googletagmanager.com",
+        "connect-src 'self' https://challenges.cloudflare.com https://fonts.googleapis.com https://www.google-analytics.com https://stats.g.doubleclick.net https://www.facebook.com https://connect.facebook.net",
         "media-src 'self'",
         "object-src 'none'",
         "base-uri 'self'",
@@ -336,6 +347,53 @@ async function verifyTurnstile(token, remoteip) {
     console.error('[ERROR] Falha na validação do Turnstile:', error);
     return { ok: false, reason: 'verify-exception' };
   }
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function fireMetaCapi(body, ip, ua, eventId) {
+  if (!META_CAPI_TOKEN) return;
+
+  const email = String(body.emailcontato || '').trim().toLowerCase();
+  const phone = String(body.telefonecontato || '').replace(/\D/g, '');
+  const name = String(body.nomecontato || '').trim();
+  const firstName = name.split(' ')[0] || '';
+  const lastName = name.split(' ').slice(1).join(' ') || '';
+  const tipovisto = String(body.tipovisto || '');
+
+  const payload = {
+    data: [{
+      event_name: 'Lead',
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId,
+      action_source: 'website',
+      user_data: {
+        em: email ? [sha256(email)] : [],
+        ph: phone ? [sha256(phone)] : [],
+        fn: firstName ? [sha256(firstName.toLowerCase())] : [],
+        ln: lastName ? [sha256(lastName.toLowerCase())] : [],
+        client_ip_address: ip,
+        client_user_agent: ua
+      },
+      custom_data: { lead_type: tipovisto, currency: 'EUR' }
+    }],
+    access_token: META_CAPI_TOKEN
+  };
+
+  fetch(`https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(async (r) => {
+      if (!r.ok) {
+        const err = await r.text().catch(() => r.status);
+        console.error('[CAPI] Meta CAPI error:', err);
+      }
+    })
+    .catch((err) => console.error('[CAPI] Meta CAPI fetch failed:', err));
 }
 
 function isRateLimited(ip) {

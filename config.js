@@ -17,6 +17,11 @@ const CONFIG = {
     DEFAULT_DDI: '+353',
     DEFAULT_UNIT_ID: '2',
 
+    ANALYTICS: {
+        GTM_ID: 'GTM-WVSTCSVV',
+        META_PIXEL_ID: '679288165070208'
+    },
+
     SECURITY: {
         ENABLED: true,
         HONEYPOT_FIELD: 'company_website',
