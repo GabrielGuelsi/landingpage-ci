@@ -1473,15 +1473,9 @@ body {
     line-height: 1.5;
 }
 
-/* Caveat highlight for "primeiro passo" */
+/* Orange highlight for "primeiro passo" */
 .caveat-highlight {
-    font-family: 'Caveat', cursive;
     color: var(--primary-color);
-    font-size: 1.35em;
-    font-weight: 700;
-    line-height: 1;
-    display: inline-block;
-    vertical-align: baseline;
 }
 
 /* Consultant info in review cards */

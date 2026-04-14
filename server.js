@@ -284,6 +284,7 @@ function sanitizePayload(body) {
     mensagem: sanitizeString(body.mensagem, 400),
     tipovisto: sanitizeString(body.tipovisto, 40),
     idunidade: sanitizeString(body.idunidade || '2', 10),
+    idmidia: sanitizeString(body.idmidia || '60', 10),
     recebeemail: body.recebeemail === 'S' ? 'S' : 'N',
     recebesms: body.recebesms === 'S' ? 'S' : 'N'
   };
