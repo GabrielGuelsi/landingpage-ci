@@ -1297,6 +1297,10 @@ function collectFormData(rawFormData) {
     if (urlParams.get('utm_term')) data.term = urlParams.get('utm_term');
     if (urlParams.get('gclid')) data.gclid = urlParams.get('gclid');
 
+    // Capturar referrer (influencer/distribuidor)
+    const referrer = sessionStorage.getItem('ci_referrer');
+    if (referrer) data.referrer_id = referrer;
+
     formDebug('Form data collected', {
         nomecontato: maskForLog(data.nomecontato, 'name'),
         emailcontato: maskForLog(data.emailcontato, 'email'),
@@ -1471,6 +1475,7 @@ async function submitForm(event) {
                 event: 'generate_lead',
                 form_name: 'ci_lead_form',
                 lead_type: formData.tipovisto || '',
+                referrer_id: sessionStorage.getItem('ci_referrer') || '',
                 enhanced_conversion_data: {
                     email: formData.emailcontato || '',
                     phone_number: (formData.dditelefonecontato || '') + (formData.telefonecontato || ''),
@@ -1558,6 +1563,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setLocale(initialLocale, false);
     loadGoogleReviews();
 
+    // --- Influencer/Distributor Referrer Tracking ---
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref');
+        if (ref) {
+            sessionStorage.setItem('ci_referrer', ref.trim());
+        }
+        const storedRef = sessionStorage.getItem('ci_referrer');
+        if (storedRef) {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'referrer_identified',
+                referrer_id: storedRef
+            });
+        }
+    })();
+
     document.querySelectorAll('.language-flag-btn').forEach((btn) => {
         btn.addEventListener('click', (event) => {
             event.preventDefault();
@@ -1630,7 +1652,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.dataLayer.push({
             event: 'form_modal_open',
             form_name: 'ci_lead_form',
-            page_location: window.location.href
+            page_location: window.location.href,
+            referrer_id: sessionStorage.getItem('ci_referrer') || ''
         });
     };
 

@@ -296,6 +296,7 @@ function sanitizePayload(body) {
   if (body.campaing) payload.campaing = sanitizeString(body.campaing, 100);
   if (body.term) payload.term = sanitizeString(body.term, 100);
   if (body.gclid) payload.gclid = sanitizeString(body.gclid, 150);
+  if (body.referrer_id) payload.referrer_id = sanitizeString(body.referrer_id, 10);
 
   return payload;
 }
