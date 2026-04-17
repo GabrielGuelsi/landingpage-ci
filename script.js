@@ -102,10 +102,10 @@ const I18N = {
         pageTitle: 'CI Irlanda - Matrícula em Curso Superior | Já está na Irlanda?',
         pageDescription: 'Já está na Irlanda? Faça sua matrícula em curso superior agora! Mais de 1200 cursos disponíveis. Suporte gratuito e completo para sua aplicação.',
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
-        headerButton: 'Iniciar meu planejamento',
-        heroTitle1: 'Escolher um curso superior na Irlanda não é sobre matrícula:',
-        heroTitle2: '<strong><span class="hero-orange">É sobre o seu futuro!</span></strong>',
-        heroSubtitle: 'Há <strong>9 anos</strong>, orientamos mais de <strong>5.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade',
+        headerButton: 'Falar com um consultor.',
+        heroTitle1: '',
+        heroTitle2: '<span class="hero-orange">SEU FUTURO<br>NA IRLANDA</span>',
+        heroSubtitle: 'Há <strong>9 anos</strong> apoiando <strong>+5000 estudantes internacionais</strong> a ingressarem em uma universidade na Irlanda de forma estratégica, considerando visto, carreira e empregabilidade.',
         heroBenefitsTitle: 'Decisões bem orientadas começam com entendimento profundo do seu perfil:',
         heroBenefits: [
             {
@@ -143,10 +143,10 @@ const I18N = {
                 phone: '+353 83 123 4567 ou +55 11 91234 5678'
             },
             visaTypeOptions: ['Selecione o visto', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
-            submit: 'Solicitar Contato',
+            submit: 'Falar com um consultor.',
             sending: 'Enviando...',
-            kicker: 'Consultoria Gratuita',
-            sub: 'Deixe suas informações e um de nossos consultores entrará em contato.',
+            kicker: 'Consultoria universitária gratuita.',
+            sub: 'Deixe suas informações para ser contactado pelo nosso time:',
             trust: ['✓ Gratuita', '✓ Individual']
         },
         benefitsSection: {
@@ -225,10 +225,10 @@ const I18N = {
         pageTitle: 'CI Ireland - Higher Education Enrollment | Already in Ireland?',
         pageDescription: 'Already in Ireland? Enroll in higher education now. More than 1,200 courses available with complete support for your application.',
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
-        headerButton: 'Start my academic planning',
-        heroTitle1: 'Choosing a higher education course in Ireland is not just about enrollment',
-        heroTitle2: '<strong><span class="hero-orange">It is about your future</span></strong>',
-        heroSubtitle: 'For <strong>9 years</strong>, we have guided more than <strong>5,000 international students</strong> in strategic academic decisions aligned with visa, career, and employability goals',
+        headerButton: 'Talk to an advisor.',
+        heroTitle1: '',
+        heroTitle2: '<span class="hero-orange">YOUR FUTURE<br>IN IRELAND</span>',
+        heroSubtitle: 'For <strong>9 years</strong>, supporting <strong>+5,000 international students</strong> to enter a university in Ireland strategically — considering visa, career, and employability.',
         heroBenefitsTitle: 'Well-informed decisions start with a deep understanding of your profile:',
         heroBenefits: [
             {
@@ -266,10 +266,10 @@ const I18N = {
                 phone: '+353 83 123 4567 or +55 11 91234 5678'
             },
             visaTypeOptions: ['Select visa type', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
-            submit: 'Request Contact',
+            submit: 'Talk to an advisor.',
             sending: 'Sending...',
-            kicker: 'Free Consultation',
-            sub: 'Fill in your details and one of our advisors will get in touch.',
+            kicker: 'Free university consultation.',
+            sub: 'Leave your information to be contacted by our team:',
             trust: ['✓ Free', '✓ One-to-one']
         },
         benefitsSection: {
@@ -349,10 +349,10 @@ const I18N = {
         pageTitle: 'CI Irlanda - Matrícula en Educación Superior | ¿Ya estás en Irlanda?',
         pageDescription: '¿Ya estás en Irlanda? Matricúlate en educación superior ahora. Más de 1.200 cursos disponibles con soporte completo para tu aplicación.',
         languageNames: { pt: 'Português', en: 'English', es: 'Español' },
-        headerButton: 'Iniciar mi planificación académica',
-        heroTitle1: 'Elegir un curso superior en Irlanda no es solo una matrícula',
-        heroTitle2: '<strong><span class="hero-orange">Se trata de tu futuro</span></strong>',
-        heroSubtitle: 'Hace <strong>9 años</strong>, orientamos a más de <strong>5.000 estudiantes internacionales</strong> en decisiones académicas estratégicas, alineadas con visa, carrera y empleabilidad',
+        headerButton: 'Hablar con un asesor.',
+        heroTitle1: '',
+        heroTitle2: '<span class="hero-orange">TU FUTURO<br>EN IRLANDA</span>',
+        heroSubtitle: 'Hace <strong>9 años</strong> apoyando a <strong>+5.000 estudiantes internacionales</strong> a ingresar en una universidad en Irlanda de forma estratégica, considerando visado, carrera y empleabilidad.',
         heroBenefitsTitle: 'Las buenas decisiones comienzan con una comprensión profunda de tu perfil:',
         heroBenefits: [
             {
@@ -390,10 +390,10 @@ const I18N = {
                 phone: '+353 83 123 4567 o +55 11 91234 5678'
             },
             visaTypeOptions: ['Selecciona la visa', 'Stamp 2', 'Stamp 4', 'Stamp 1/1G', 'EU Passport', 'Other'],
-            submit: 'Solicitar contacto',
+            submit: 'Hablar con un asesor.',
             sending: 'Enviando...',
-            kicker: 'Consulta Gratuita',
-            sub: 'Completa tus datos y uno de nuestros asesores se pondrá en contacto.',
+            kicker: 'Consultoría universitaria gratuita.',
+            sub: 'Deja tus datos para ser contactado por nuestro equipo:',
             trust: ['✓ Gratuita', '✓ Individual']
         },
         benefitsSection: {
@@ -516,8 +516,6 @@ function applyLocalizedContent(locale) {
     });
 
     setText('.header-button', tr('headerButton'));
-    setText('.hero-cta-btn', tr('headerButton'));
-    setText('.hero-title', tr('heroTitle1'));
     setHtml('.hero-title-2', tr('heroTitle2'));
     setHtml('.hero-subtitle', tr('heroSubtitle'));
     setText('.hero-benefits-title', tr('heroBenefitsTitle'));
@@ -533,7 +531,6 @@ function applyLocalizedContent(locale) {
         if (descNode) descNode.textContent = benefit.description;
     });
 
-    setText('.hero-form-title', tr('form.title'));
     setText('.hero-form-kicker', tr('form.kicker'));
     setText('.hero-form-sub', tr('form.sub'));
     const trustSpans = document.querySelectorAll('.hero-form-trust span');
