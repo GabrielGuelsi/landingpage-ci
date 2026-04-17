@@ -82,7 +82,67 @@
                     <h1 class="hero-title-2"><span class="hero-orange">É sobre o seu futuro!</span></h1>
                     <p class="hero-subtitle">Há <strong>9 anos</strong>, orientamos mais de <strong>5.000 estudantes internacionais</strong> em decisões acadêmicas estratégicas, alinhadas a visto, carreira e empregabilidade</p>
                 </div>
-                <a href="#" class="hero-cta-btn" data-open-form>Iniciar meu planejamento</a>
+            </div>
+
+            <!-- Formulário inline -->
+            <div class="hero-form-column">
+                <div class="hero-form-card">
+                    <div class="hero-form-header">
+                        <div class="hero-form-kicker">Consulta Gratuita</div>
+                        <h2 class="hero-form-title" id="modalFormTitle">Iniciar meu planejamento acadêmico</h2>
+                        <p class="hero-form-sub">Fala mais sobre você e um de nossos consultores entrará em contato.</p>
+                    </div>
+
+                    <form id="contactForm" class="hero-form contact-form">
+                        <input type="hidden" id="form_started_at" name="form_started_at" value="">
+                        <div class="form-group form-honeypot" aria-hidden="true">
+                            <label for="company_website">Website</label>
+                            <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nomecontato">Nome Completo <span class="req">*</span></label>
+                                <input type="text" id="nomecontato" name="nomecontato" required placeholder="Seu nome completo" autocomplete="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailcontato">E-mail <span class="req">*</span></label>
+                                <input type="email" id="emailcontato" name="emailcontato" required placeholder="seu@email.com" autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telefonecontato">Telefone/WhatsApp <span class="req">*</span></label>
+                                <input type="tel" id="telefonecontato" name="telefonecontato" required placeholder="+353 83 123 4567" autocomplete="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="tipovisto">Tipo de visto <span class="req">*</span></label>
+                                <select id="tipovisto" name="tipovisto" required>
+                                    <option value="">Selecione o visto</option>
+                                    <option value="Stamp 2">Stamp 2</option>
+                                    <option value="Stamp 4">Stamp 4</option>
+                                    <option value="Stamp 1/1G">Stamp 1/1G</option>
+                                    <option value="EU Passport">EU Passport</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="hero-form-submit" id="submitBtn">
+                            <span class="btn-text">Solicitar Contato</span>
+                            <span class="btn-loader" style="display: none;">Enviando...</span>
+                        </button>
+
+                        <div id="turnstileContainer" class="turnstile-container" aria-live="polite"></div>
+                        <div id="formMessage" class="form-message"></div>
+                    </form>
+
+                    <div class="hero-form-trust">
+                        <span>&#10003; Gratuita</span>
+                        <span>&#10003; Individual</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -309,70 +369,6 @@ Será um prazer receber você.</p>
             </div>
         </div>
     </footer>
-
-    <!-- Form Modal -->
-    <div class="modal-overlay" id="hero-form-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalFormTitle">
-        <div class="modal-box">
-            <button class="modal-close" data-close-form aria-label="Fechar">&#10005;</button>
-
-            <div class="modal-header form-header">
-                <div class="modal-kicker">Consulta Gratuita</div>
-                <h2 class="modal-title" id="modalFormTitle">Iniciar meu planejamento acadêmico</h2>
-                <p class="modal-sub">Fala mais sobre você e um de nossos consultores entrará em contato.</p>
-            </div>
-
-            <form id="contactForm" class="modal-form contact-form">
-                <input type="hidden" id="form_started_at" name="form_started_at" value="">
-                <div class="form-group form-honeypot" aria-hidden="true">
-                    <label for="company_website">Website</label>
-                    <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nomecontato">Nome Completo <span class="req">*</span></label>
-                        <input type="text" id="nomecontato" name="nomecontato" required placeholder="Seu nome completo" autocomplete="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="emailcontato">E-mail <span class="req">*</span></label>
-                        <input type="email" id="emailcontato" name="emailcontato" required placeholder="seu@email.com" autocomplete="email">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="telefonecontato">Telefone/WhatsApp <span class="req">*</span></label>
-                        <input type="tel" id="telefonecontato" name="telefonecontato" required placeholder="+353 83 123 4567" autocomplete="tel">
-                    </div>
-                    <div class="form-group">
-                        <label for="tipovisto">Tipo de visto <span class="req">*</span></label>
-                        <select id="tipovisto" name="tipovisto" required>
-                            <option value="">Selecione o visto</option>
-                            <option value="Stamp 2">Stamp 2</option>
-                            <option value="Stamp 4">Stamp 4</option>
-                            <option value="Stamp 1/1G">Stamp 1/1G</option>
-                            <option value="EU Passport">EU Passport</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button type="submit" class="modal-submit" id="submitBtn">
-                    <span class="btn-text">Solicitar Contato</span>
-                    <span class="btn-loader" style="display: none;">Enviando...</span>
-                </button>
-
-                <div id="turnstileContainer" class="turnstile-container" aria-live="polite"></div>
-                <div id="formMessage" class="form-message"></div>
-            </form>
-
-            <div class="modal-trust">
-                <span>&#10003; Gratuita</span>
-                <span>&#10003; Individual</span>
-               
-            </div>
-        </div>
-    </div>
 
     <script src="config.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>

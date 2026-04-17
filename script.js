@@ -533,10 +533,10 @@ function applyLocalizedContent(locale) {
         if (descNode) descNode.textContent = benefit.description;
     });
 
-    setText('.form-header h2', tr('form.title'));
-    setText('.modal-kicker', tr('form.kicker'));
-    setText('.modal-sub', tr('form.sub'));
-    const trustSpans = document.querySelectorAll('.modal-trust span');
+    setText('.hero-form-title', tr('form.title'));
+    setText('.hero-form-kicker', tr('form.kicker'));
+    setText('.hero-form-sub', tr('form.sub'));
+    const trustSpans = document.querySelectorAll('.hero-form-trust span');
     const trustLabels = I18N[currentLocale].form.trust;
     if (trustSpans && trustLabels) {
         trustSpans.forEach((span, i) => { if (trustLabels[i]) span.textContent = trustLabels[i]; });
@@ -1639,52 +1639,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const formModal = document.getElementById('hero-form-modal');
+    const heroFormEl = document.getElementById('contactForm');
     const openFormTriggers = document.querySelectorAll('[data-open-form]');
-    const closeFormTriggers = document.querySelectorAll('[data-close-form]');
 
-    const openFormModal = () => {
-        if (!formModal) return;
-        formModal.classList.add('is-open');
-        formModal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+    const scrollToHeroForm = (trigger) => {
+        if (!heroFormEl) return;
+        heroFormEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const firstInput = heroFormEl.querySelector('input:not([type=hidden]):not([tabindex="-1"]), select');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus({ preventScroll: true }), 500);
+        }
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
-            event: 'form_modal_open',
+            event: 'form_scroll_to',
             form_name: 'ci_lead_form',
+            trigger_location: (trigger && (trigger.closest('section, header')?.className || 'unknown')) || 'unknown',
             page_location: window.location.href,
             referrer_id: sessionStorage.getItem('ci_referrer') || ''
         });
     };
 
-    const closeFormModal = () => {
-        if (!formModal) return;
-        formModal.classList.remove('is-open');
-        formModal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-    };
-
     openFormTriggers.forEach((trigger) => {
         trigger.addEventListener('click', (e) => {
             e.preventDefault();
-            openFormModal();
+            scrollToHeroForm(trigger);
         });
-    });
-
-    closeFormTriggers.forEach((trigger) => {
-        trigger.addEventListener('click', closeFormModal);
-    });
-
-    if (formModal) {
-        formModal.addEventListener('click', (e) => {
-            if (e.target === formModal) closeFormModal();
-        });
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && formModal && formModal.classList.contains('is-open')) {
-            closeFormModal();
-        }
     });
 
     // Adicionar event listener ao formulário
